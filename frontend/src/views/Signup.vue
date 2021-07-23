@@ -22,7 +22,7 @@
                         <div class="my-1 text-right">Champs requis (*)</div>
                         <v-divider class="mt-9"></v-divider>
                         <v-card-actions>
-                            <v-btn :disabled="!valid" color="success" class="mr-4" @click="signup()">Inscription</v-btn>
+                            <v-btn :disabled="!valid" color="success" class="mr-4 mt-3" @click="signup()">Inscription</v-btn>
                         </v-card-actions>
                     </v-form>
                 </v-card-text>

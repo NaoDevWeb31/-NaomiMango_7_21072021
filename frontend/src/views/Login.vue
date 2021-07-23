@@ -14,12 +14,12 @@
       <v-card raised class="my-4 mx-auto" width="30rem">
         <v-card-text>
           <v-form ref="form" v-model="valid">
-            <v-text-field v-model="email" :rules="emailRules" label="E-mail (*)" type="email" required prepend-icon="mdi-at" color="black"></v-text-field>
-            <v-text-field v-model="password" :rules="passwordRules" label="Mot de passe (*)" type="password" required prepend-icon="mdi-lock-outline" color="black"></v-text-field>
+            <v-text-field v-model="email" ref="email" :rules="emailRules" label="E-mail (*)" type="email" required prepend-icon="mdi-at" color="black"></v-text-field>
+            <v-text-field v-model="password" ref="password" :rules="passwordRules" label="Mot de passe (*)" type="password" required prepend-icon="mdi-lock-outline" color="black"></v-text-field>
             <div class="my-1 text-right">Champs requis (*)</div>
             <v-divider class="mt-9"></v-divider>
             <v-card-actions>
-              <v-btn :disabled="!valid" color="success" class="mr-4" @click="login()">Connexion</v-btn>
+              <v-btn :disabled="!valid" color="success" class="mr-4 mt-3" @click="login()">Connexion</v-btn>
             </v-card-actions>
           </v-form>
       </v-card-text>
@@ -64,7 +64,7 @@ import axios from "axios"
           })
           .then(response => {
             // Si l'inscription a bien été effectuée
-            if (response.status === 201){
+            if (response.status === 200){
                 const user = {
                     token: response.data.token,
                     userId: response.data.userId,

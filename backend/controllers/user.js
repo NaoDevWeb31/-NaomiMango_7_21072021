@@ -43,7 +43,7 @@ exports.login = (req, res, next) => {
     const password = req.body.password;
     
     // Préparer la requête SQL pour récupérer un utilisateur
-    let sql = "SELECT id, email, password, admin_role FROM users WHERE email = ?";
+    let sql = "SELECT id, first_name, email, password, admin_role FROM users WHERE email = ?";
     // Insérer les valeurs du corps de la requête POST dans la requête SQL
     let inserts = [email];
     // Assembler la requête d'insertion SQL finale
@@ -69,10 +69,12 @@ exports.login = (req, res, next) => {
                 // Si le mdp saisi correspond, renvoyer l'identifiant userID et un token (jeton Web JSON) au front-end
                 res.status(200).json({
                     userId: result[0].id,
+                    adminRole: result[0].admin_role,
+                    firstName: result[0].first_name,
                     // Encoder un nouveau token
                     token: jwt.sign(
                         // Contenant l'identifiant et le rôle administrateur  en tant que payload (les données encodées dans le token)
-                        { userId: result[0].id, adminRole: result[0].admin_role },
+                        { userId: result[0].id, adminRole: result[0].admin_role, firstName: result[0].first_name },
                         // En utilisant une chaîne secrète de développement temporaire (à remplacer par une chaîne aléatoire beaucoup plus longue)
                         "RANDOM_TOKEN_SECRET",
                         // En définissant la durée de validité du token (se reconnecter au bout de 24 heures)

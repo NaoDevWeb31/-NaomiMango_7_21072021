@@ -86,3 +86,31 @@ exports.login = (req, res, next) => {
             .catch(error => res.status(500).json({ error }));
     });
 };
+
+exports.getUserProfile = (req, res, next) => {
+    const token = req.headers.authorization.split(" ")[1];
+    const decodedToken = jwt.verify(token, "RANDOM_TOKEN_SECRET");
+    const userId = decodedToken.userId;
+
+        // Préparer la requête SQL pour récupérer un utilisateur
+        let sql = "SELECT last_name, first_name, email FROM users WHERE id = ?";
+        // Insérer les valeurs du corps de la requête POST dans la requête SQL
+        let inserts = [userId];
+        // Assembler la requête d'insertion SQL finale
+        sql = mysql.format(sql, inserts);
+        // Effectuer la requête auprès de la base de données
+        db.query(sql, function (error, result) {
+            if (error || result === "" || result == undefined) {
+                console.log("Il y a une erreur : " + error)
+                return res.status(400).json({ error })
+            } else {
+                console.log(result[0])
+                return res.status(200).json({
+                    lastName: result[0].last_name,
+                    firstName: result[0].first_name,
+                    email: result[0].email
+                })
+            }
+        });
+    
+}

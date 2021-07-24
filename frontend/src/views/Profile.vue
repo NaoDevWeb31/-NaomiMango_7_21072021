@@ -1,0 +1,119 @@
+<template>
+    <v-container class="fill-height" fluid v-if="accedAccount">
+        <HeaderLogged/>
+        <v-row>
+            <v-col>
+                <h1 class="text-h2 text-center">Mon Profil</h1>
+            </v-col>
+        </v-row>
+        <v-row class="d-flex flex-column flex-sm-row justify-center">
+            <v-card raised class="pa-4 mx-auto" width="40rem" >
+                <v-card-title red>
+                    Informations personnelles de l'utilisateur :
+                </v-card-title>
+                <v-divider></v-divider>
+                <v-card-text>
+                    <!-- NOM -->
+                    <v-row class="d-flex 3ustify-space-between">
+                        <v-col col="3">
+                            <p class="black--text data grey lighten-3">Nom de famille</p>
+                        </v-col>
+                        <v-col col="9">
+                            <p class="black--text data grey lighten-3 text-center">{{ userProfile.lastName }}</p>
+                        </v-col>
+                    </v-row>
+                    <!-- PRÉNOM -->
+                    <v-row class="d-flex justify-space-between">
+                        <v-col col="3">
+                            <p class="black--text data grey lighten-3">Prénom</p>
+                        </v-col>
+                        <v-col col="9">
+                            <p class="black--text data grey lighten-3 text-center">{{ userProfile.firstName }}</p>
+                        </v-col>
+                    </v-row>
+                    <!-- EMAIL -->
+                    <v-row class="d-flex justify-space-between">
+                        <v-col col="3">
+                            <p class="black--text data grey lighten-3">E-mail</p>
+                        </v-col>
+                        <v-col col="9">
+                            <p class="black--text data grey lighten-3 text-center">{{ userProfile.email }}</p>
+                        </v-col>
+                    </v-row>
+                </v-card-text>
+                <v-divider></v-divider>
+                <v-card-actions class="d-flex justify-end mt-3">
+                    <v-btn color="red">Supprimer mon profil</v-btn>
+                </v-card-actions>
+            </v-card>
+        </v-row>
+    </v-container>
+</template>
+
+<script>
+import HeaderLogged from '../components/HeaderLogged.vue'
+import axios from "axios"
+import jwt from "jsonwebtoken"
+
+export default {
+    name: 'Profile',
+    components: {
+        HeaderLogged,
+    },
+    data() {
+        return {
+            //Par défaut
+            accedAccount: false, // Accès non autorisé à cette page
+            sessionUserId: 0,
+            sessionUserRole: 0,
+            userProfile: [],
+        }
+    },
+    created(){
+        // Vérifier que l'utilisateur est bien connecté avant d'avoir accès à cette page
+        this.connectedUser()
+    },
+    beforeMount() {
+        // Si l'utilisateur a accès à cette page (est connecté)
+        if (this.accedAccount === true) {
+            const token = JSON.parse(localStorage.user).token; // Récupèrer le token du localStorage
+            let decodedToken = jwt.verify(token, "RANDOM_TOKEN_SECRET"); // Décoder ce token en le vérifiant
+            this.sessionUserId = decodedToken.userId; // l'ID de l'user pour la session = l'user Id décodé
+            this.sessionUserRole = decodedToken.adminRole; // le rôle de l'user pour la session = le rôle admin décodé
+            this.getUserProfile();
+        }
+    },
+    methods: {
+        connectedUser(){
+            // Si l'user n'est pas stocké dans le localStorage
+            if (localStorage.user == undefined){
+                this.accedAccount = false;
+                console.log("Accès non autorisé !")
+            } else { // Si l'user est bien stocké dans le localStorage
+                this.accedAccount = true;
+                console.log("Accès autorisé à l'utilisateur !");
+            }
+    },
+        getUserProfile(){
+            // l'ID de l'user pour la session
+            const userId = this.sessionUserId;
+            const token = JSON.parse(localStorage.user).token;
+            axios.get(`http://localhost:3000/api/auth/users/${userId}`, {headers: {Authorization: 'Bearer ' + token}})
+            .then(res => {
+                this.userProfile = res.data; // Infos de l'user
+            })
+        },
+    },
+}
+</script>
+
+<style lang="scss">
+
+.data {
+    font-size: 1.3rem ;
+    border: 1px grey solid;
+    border-radius: 1rem;
+    padding: 1rem;
+}
+
+</style>

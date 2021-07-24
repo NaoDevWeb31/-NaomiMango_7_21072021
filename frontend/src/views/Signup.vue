@@ -91,7 +91,7 @@ export default {
                         }
                         localStorage.setItem('user', JSON.stringify(user));
                         alert("Félicitation ! Vous êtes maintenant inscrit !")
-                        this.$router.push('/wall')
+                        this.$router.push('/account')
                     }
                 })
                 .catch(error => {

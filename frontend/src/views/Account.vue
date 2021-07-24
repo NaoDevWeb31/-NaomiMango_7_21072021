@@ -1,0 +1,80 @@
+<template>
+    <v-container class="fill-height" fluid>
+        <p v-if="!accedAccount" class="display-1 text-center mx-auto" width="100%">Accès non autorisé !</p>
+        
+        <!-- Si l'utilisateur est bien connecté -->
+        <HeaderLogged v-if="accedAccount"/>
+        <v-container class="fill-height" fluid v-if="accedAccount">
+            <v-row>
+                <v-col>
+                    <h1 class="text-center text-h3">
+                        Bienvenue sur votre compte<br/>
+                        <span>{{firstName}}</span> !
+                    </h1>
+                </v-col>
+            </v-row>
+            <v-row class="d-flex flex-column flex-sm-row justify-center">
+                <!-- CARTE PROFIL -->
+                <v-col cols="12" sm="6">
+                    <router-link to="/account/profile">
+                        <v-card>
+                            <v-img class="white--text align-end" max-height="350px" :src="require('../assets/Profile.jpg')">
+                                <v-card-title>
+                                    <h3 class="headline mb-0 text-center">Mon Profil</h3>
+                                </v-card-title>
+                            </v-img>
+                        </v-card>
+                    </router-link>
+                </v-col>
+                <!-- CARTE FORUM -->
+                <v-col cols="12" sm="6">
+                    <router-link to="/account/forum">
+                        <v-card>
+                            <v-img class="white--text align-end" max-height="350px" :src="require('../assets/Forum.jpg')">
+                                <v-card-title>
+                                    <h3 class="headline mb-0 text-center">Forum</h3>
+                                </v-card-title>
+                            </v-img>
+                        </v-card>
+                    </router-link>
+                </v-col>
+            </v-row>
+        </v-container>
+    </v-container>
+</template>
+
+<script>
+import HeaderLogged from '../components/HeaderLogged.vue'
+
+export default {
+    name: 'Account',
+    components: {
+        HeaderLogged,
+    },
+    data() {
+        return {
+            // Par défaut, accès non autorisé à cette page
+            accedAccount: false,
+            firstName: "",
+        }
+    },
+    beforeMount() {
+        // Vérifier que l'utilisateur est bien connecté avant d'avoir accès à cette page
+        this.connectedUser()
+    },
+    methods: {
+        connectedUser(){
+            // Si l'user n'est pas stocké dans le localStorage
+            if (localStorage.user === undefined){
+                this.accedAccount = false;
+                console.log("Accès non autorisé !")
+            } else { // Si l'user est bien stocké dans le localStorage
+                this.accedAccount = true;
+                console.log("Accès autorisé à l'utilisateur !");
+                const user = JSON.parse(localStorage.getItem("user"));
+                this.firstName = user.firstName; // Retourner le prénom de l'utilisateur
+            }
+        },
+    },
+}
+</script>

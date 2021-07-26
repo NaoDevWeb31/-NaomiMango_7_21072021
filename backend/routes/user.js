@@ -13,6 +13,7 @@ const passwordValidator = require("../middleware/password-validator");
 router.post("/signup",passwordValidator, userCtrl.signup);
 router.post("/login", userCtrl.login);
 router.get("/users/:id", auth, userCtrl.getUserProfile);
+router.delete("/users/:id", auth, userCtrl.deleteOneUser);
 
 // Permettre l'export du routeur sur d'autres fichiers
 module.exports = router;

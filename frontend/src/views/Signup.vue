@@ -87,7 +87,8 @@ export default {
                         const user = {
                             token: response.data.token,
                             userId: response.data.userId,
-                            firstName: response.data.firstName
+                            firstName: response.data.firstName,
+                            adminRole: response.data.adminRole
                         }
                         localStorage.setItem('user', JSON.stringify(user));
                         alert("Félicitation ! Vous êtes maintenant inscrit !")

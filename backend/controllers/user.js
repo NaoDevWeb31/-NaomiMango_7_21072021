@@ -27,13 +27,43 @@ exports.signup = (req, res, next) => {
             // Effectuer la requête auprès de la base de données
             db.query(sql, function (error, result) {
                 if (error) {
-                    console.log("Il y a une erreur :" + error)
+                    console.log("Inscription échouée :" + error)
                     return res.status(400).json({ error })
                 } else {
                     console.log("Utilisateur créé !")
-                    return res.status(201).json({ message: "Utilisateur créé !" })
+                    // Préparer la requête SQL pour récupérer un utilisateur
+                    let sql = "SELECT id, first_name, admin_role FROM users WHERE email = ?";
+                    // Insérer les valeurs du corps de la requête POST dans la requête SQL
+                    let inserts = [email];
+                    // Assembler la requête d'insertion SQL finale
+                    sql = mysql.format(sql, inserts);
+                    // Effectuer la requête auprès de la base de données
+                    db.query(sql, function (error, result) {
+                        // Si l'utilisateur ne correspond pas à un utilisateur existant de la base de données
+                        if (result === "" || result == undefined) {
+                            console.log(error)
+                            return res.status(401).json({ error: "Utilisateur introuvable !" });
+                        } else {
+                            console.log("Utilisateur connecté !")
+                            return res.status(201).json({
+                                message: "Utilisateur créé et connecté !",
+                                userId: result[0].id,
+                                // Encoder un nouveau token
+                                token: jwt.sign(
+                                    // Contenant l'identifiant et le rôle administrateur  en tant que payload (les données encodées dans le token)
+                                    { userId: result[0].id,firstName: result[0].first_name, adminRole: result[0].admin_role },
+                                    // En utilisant une chaîne secrète de développement temporaire (à remplacer par une chaîne aléatoire beaucoup plus longue)
+                                    "RANDOM_TOKEN_SECRET",
+                                    // En définissant la durée de validité du token (se reconnecter au bout de 24 heures)
+                                    { expiresIn: "2h" }
+                                ),
+                                firstName: result[0].first_name,
+                                adminRole: result[0].admin_role
+                            })
+                        }
+                    });
                 }
-            });
+            })
         })
         .catch(error => res.status(500).json({ error }));
 };
@@ -101,10 +131,10 @@ exports.getUserProfile = (req, res, next) => {
         // Effectuer la requête auprès de la base de données
         db.query(sql, function (error, result) {
             if (error || result === "" || result == undefined) {
-                console.log("Il y a une erreur : " + error)
-                return res.status(400).json({ error })
+                console.log("Utilisateur introuvable : " + error)
+                return res.status(400).json({ error : "Erreur, utilisateur introuvable !" })
             } else {
-                console.log(result[0])
+                console.log("Informations de l'utilisateur reçues sur le profil !")
                 return res.status(200).json({
                     lastName: result[0].last_name,
                     firstName: result[0].first_name,
@@ -112,5 +142,33 @@ exports.getUserProfile = (req, res, next) => {
                 })
             }
         });
+    
+}
+
+exports.deleteOneUser = (req, res, next) => {
+    const token = req.headers.authorization.split(" ")[1];
+    const decodedToken = jwt.verify(token, "RANDOM_TOKEN_SECRET");
+    const userId = decodedToken.userId;
+
+    if (Number(req.params.id) === userId) {
+        // Préparer la requête SQL pour récupérer un utilisateur
+        let sql = "DELETE FROM users WHERE id = ?";
+        // Insérer les valeurs du corps de la requête POST dans la requête SQL
+        let inserts = [userId];
+        // Assembler la requête d'insertion SQL finale
+        sql = mysql.format(sql, inserts);
+        // Effectuer la requête auprès de la base de données
+        db.query(sql, function (error, result) {
+            if (error) {
+                console.log("Tentative de suppression de l'utilisateur échouée : " + error)
+                return res.status(400).json({ error: "Tentative de suppression de l'utilisateur échouée !" })
+            } else {
+                console.log("Utilisateur supprimé !")
+                return res.status(200).json({ message: "Utilisateur supprimé !" })
+            }
+        });
+    } else {
+        return res.status(400).json({ error: "Tentative de suppression de l'utilisateur non autorisée !" })
+    }
     
 }

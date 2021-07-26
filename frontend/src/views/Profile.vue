@@ -1,12 +1,16 @@
 <template>
-    <v-container class="fill-height" fluid v-if="accedAccount">
-        <HeaderLogged/>
-        <v-row>
+    <v-container class="fill-height" fluid>
+        <!-- Si l'utilisateur n'est pas bien connecté -->
+        <p v-if="!accedAccount" class="display-1 text-center mx-auto" width="100%">Accès non autorisé !</p>
+        
+        <!-- Si l'utilisateur est bien connecté -->
+        <HeaderLogged v-if="accedAccount"/>
+        <v-row v-if="accedAccount">
             <v-col>
                 <h1 class="text-h2 text-center">Mon Profil</h1>
             </v-col>
         </v-row>
-        <v-row class="d-flex flex-column flex-sm-row justify-center">
+        <v-row v-if="accedAccount" class="d-flex flex-column flex-sm-row justify-center">
             <v-card raised class="pa-4 mx-auto" width="40rem" >
                 <v-card-title red>
                     Informations personnelles de l'utilisateur :
@@ -43,7 +47,7 @@
                 </v-card-text>
                 <v-divider></v-divider>
                 <v-card-actions class="d-flex justify-end mt-3">
-                    <v-btn color="red">Supprimer mon profil</v-btn>
+                    <v-btn color="red" @click="deleteUser()">Supprimer mon profil</v-btn>
                 </v-card-actions>
             </v-card>
         </v-row>
@@ -103,6 +107,27 @@ export default {
                 this.userProfile = res.data; // Infos de l'user
             })
         },
+        deleteUser(){
+            if (confirm("❗ ALERTE ❗\nLa suppression d'un compte est définitive.\nConfirmez-vous la suppression de votre compte ?")) {
+                // l'ID de l'user pour la session
+                const userId = this.sessionUserId;
+                const token = JSON.parse(localStorage.user).token;
+                axios.delete(`http://localhost:3000/api/auth/users/${userId}`, {headers: {Authorization: 'Bearer ' + token}})
+                .then(res => {
+                    // Si l'inscription a bien été effectuée
+                    if (res.status === 200){
+                        localStorage.removeItem('user');
+                        alert(res.data.message);
+                        this.$router.push('/')
+                    }
+                })
+                .catch(error => {
+                    console.log(error.response.data.error);
+                    alert(error.response.data.error);
+                    location.reload()
+                })
+            }
+        }
     },
 }
 </script>

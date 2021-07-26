@@ -85,7 +85,6 @@ exports.login = (req, res, next) => {
             console.log(error)
             return res.status(401).json({ error: "Utilisateur introuvable !" });
         }
-        console.log(result);
         // Si l'utilisateur correspond
         bcrypt
         // Comparer le mdp saisi avec le hash enregistré dans la base de données

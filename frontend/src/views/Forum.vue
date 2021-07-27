@@ -11,11 +11,11 @@
                 <v-row class="my-2">
                     <v-col>
                         <h1 class="text-center text-h3">
-                            Forum
+                            Bienvenue sur le Forum !
                         </h1>
                     </v-col>
                 </v-row>
-                <v-divider></v-divider>
+                <PostsNav/>
                 <Posts/>
             </v-container>
         </v-container>
@@ -25,12 +25,14 @@
 <script>
 import HeaderLogged from '../components/HeaderLogged.vue'
 import Posts from '../components/Posts.vue'
+import PostsNav from '../components/PostsNav.vue'
 
 export default {
     name: "Forum",
     components: {
         HeaderLogged,
-        Posts
+        PostsNav,
+        Posts,
     },
     data(){
         return {
@@ -58,3 +60,4 @@ export default {
     },
 }
 </script>
+

@@ -6,6 +6,7 @@ import Signup from '../views/Signup.vue'
 import Account from '../views/Account.vue'
 import Profile from '../views/Profile.vue'
 import Forum from '../views/Forum.vue'
+import NewPost from '../views/NewPost.vue'
 
 Vue.use(VueRouter)
 
@@ -39,6 +40,11 @@ const routes = [
     path: '/account/forum',
     name: 'Forum',
     component: Forum
+  },
+  {
+    path: '/account/forum/create-post',
+    name: 'NewPost',
+    component: NewPost
   },
   {
     path: '/about',

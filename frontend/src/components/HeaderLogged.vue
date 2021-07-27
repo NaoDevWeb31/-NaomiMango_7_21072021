@@ -7,7 +7,7 @@
         dark
         >
         <!-- LOGO -->
-            <router-link to="../">
+            <router-link to="/">
                 <div class="d-flex align-center">
                     <v-img
                     alt="Logo de l'entreprise Groupomania"
@@ -20,10 +20,19 @@
                 </div>
             </router-link>
             <v-spacer></v-spacer>
+            <router-link to=".">
+                <div class="mx-6">
+                    <v-btn outline>
+                        <v-icon>mdi-arrow-left</v-icon>
+                        <span class="d-none d-sm-inline ml-1">Page précédente</span>
+                    </v-btn>
+                    
+                </div>
+            </router-link>
             <!-- BOUTON INSCRIPTION -->
                 <div class="d-flex align-center">
                     <v-btn v-on:click="deconnect()" color="dark">
-                        Se déconnecter
+                        <span class="d-none d-sm-inline mr-1">Se déconnecter</span>
                         <v-icon>mdi-logout-variant</v-icon>
                     </v-btn>
                 </div>
@@ -37,7 +46,7 @@ export default {
     methods: {
         deconnect(){
             localStorage.clear();
-            location.href = '../';
+            this.$router.push('/')
         }
     },
 }

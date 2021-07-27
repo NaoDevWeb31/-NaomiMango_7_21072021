@@ -1,9 +1,11 @@
 // Import de packages dans l'appli
 const express = require("express");
 require("dotenv").config(); // Charge les variables d'environnement d'un fichier ".env" dans "process.env." (masque les infos de connexion à MongoDB Atlas)
+const path = require("path"); // Accède au path de notre serveur
 
 // Import des routeurs dans l'appli
 const userRoutes = require("./routes/user");
+const postRoutes = require("./routes/post")
 
 // Créer l'appli
 const app = express();
@@ -23,8 +25,13 @@ app.use((req, res, next) => {
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
+// Utiliser le gestionnaire de routage pour gérer le sous-dosser "images" de manière statique à chaque fois qu'elle reçoit une requête vers la route "/images"
+app.use("/images", express.static(path.join(__dirname, "images")));
+
 // Utiliser du routeur "user" pour toutes les requêtes vers "/api/auth" dans l'appli
 app.use("/api/auth", userRoutes);
+// Utiliser du routeur "post" pour toutes les requêtes vers "/api/posts" dans l'appli
+app.use("/api/posts", postRoutes);
 
 // Permettre l'export de l'appli sur d'autres fichiers
 module.exports = app;

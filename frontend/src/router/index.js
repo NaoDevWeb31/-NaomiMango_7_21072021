@@ -7,6 +7,7 @@ import Account from '../views/Account.vue'
 import Profile from '../views/Profile.vue'
 import Forum from '../views/Forum.vue'
 import NewPost from '../views/NewPost.vue'
+import OnePost from '../views/OnePost.vue'
 
 Vue.use(VueRouter)
 
@@ -45,6 +46,11 @@ const routes = [
     path: '/account/forum/create-post',
     name: 'NewPost',
     component: NewPost
+  },
+  {
+    path: '/account/forum/posts/:id',
+    name: 'OnePost',
+    component: OnePost
   },
   {
     path: '/about',

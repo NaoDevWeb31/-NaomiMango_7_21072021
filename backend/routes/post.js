@@ -14,7 +14,8 @@ router.get("/", auth, postCtrl.getAllPosts);
 router.post("/", auth, multer, postCtrl.createPost);
 router.get("/user", auth, postCtrl.getOneUserPosts);
 router.get("/:id", auth, postCtrl.getOnePost);
-
+router.put("/:id", auth, multer, postCtrl.modifyPost);
+router.delete("/:id", auth, postCtrl.deletePost);
 
 // Permettre l'export du routeur sur d'autres fichiers
 module.exports = router;

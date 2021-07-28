@@ -24,17 +24,34 @@
                     </v-col>
                     <!-- POST -->
                     <v-col cols="12" class="mt-3" v-if="post !== 0" :key="post.id">
-                        <v-card width="500" class="mx-auto rounded-lg">
+                        <v-card width="600" class="mx-auto rounded-lg">
                             <v-list-item five-line class="px-0 py-0">
                                 <v-list-item-content class="px-0 py-0">
+                                    <!-- LIGNE 1 -->
+                                    <div class="px-5 py-1">
+                                        <v-card-actions class="d-flex justify-space-between align-center">
+                                            <v-btn color="red">
+                                                <v-icon>mdi-file-document-edit</v-icon>
+                                                <span class="ml-1 d-none d-sm-inline">Modifier</span>
+                                            </v-btn>
+                                            <v-btn color="red" @click="deletePost(post.id)">
+                                                <v-icon>mdi-delete</v-icon>
+                                                <span class="ml-1 d-none d-sm-inline">Supprimer</span>
+                                            </v-btn>
+                                        </v-card-actions>
+                                    </div>
+                                    <v-divider class="red lighten-4 mb-1"></v-divider>
+                                    <!-- LIGNE 2 -->
                                     <div class="px-5 py-1 text-overline">Publié par {{ post.first_name }} {{ post.last_name }} | Le {{ formatCreationDate(post.creation_date) }}</div>
                                     <v-divider class="red lighten-4 mb-3"></v-divider>
+                                    <!-- LIGNE 3 -->
                                     <div class="px-5 py-2 text-h5">{{ post.title }}</div>
                                     <div class="px-5 py-2">{{ post.description }}</div>
                                     <div class="px-5 pt-3 pb-5 d-flex justify-center">
                                         <v-img :src="post.image_url" cover width="200"/>
                                     </div>
                                     <v-divider class="mb-0 red lighten-4"></v-divider>
+                                    <!-- LIGNE 4 -->
                                     <div class="d-flex flex-md-row align-center mb-1">
                                         <div class="px-2 text-body-1">
                                             <v-btn text icon color="black lighten-2">
@@ -121,6 +138,21 @@ export default {
                     this.post = res.data[0]; // Le post
                     console.log("Le post " + this.post.id + " est bien affiché !");
                 }
+            })
+        },
+        deletePost(id){
+            const postId = id;
+            const token = JSON.parse(localStorage.user).token;
+            axios.delete(`http://localhost:3000/api/posts/${postId}`, {headers: {Authorization: 'Bearer ' + token}})
+            .then((res) => {
+                if(res.status === 200) {
+                    alert(res.data.message);
+                    location.reload()
+                }
+            })
+            .catch(error => {
+                console.log(error.response.data.error);
+                alert(error.response.data.error);
             })
         },
         formatCreationDate(date){

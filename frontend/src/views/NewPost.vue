@@ -26,8 +26,9 @@
                                 <v-file-input v-model="image" ref="image" :rules="imageRules" accept="image/gif" label="Image du post" type="file" filled prepend-icon="mdi-camera" show-size color="black"></v-file-input>
                                 <div class="my-1 text-right">Champs requis (*)</div>
                                 <v-divider class="mt-9"></v-divider>
-                                <v-card-actions>
-                                    <v-btn :disabled="!valid" color="success" class="mr-4 mt-3" @click="createPost()">Créer le post</v-btn>
+                                <v-card-actions class="d-flex justify-space-between">
+                                    <v-btn :disabled="!valid" color="success" class="mt-3" @click="createPost()">Créer le post</v-btn>
+                                    <v-btn color="red lighten-1" dark class="mt-3" @click="backToForum()">Annuler</v-btn>
                                 </v-card-actions>
                             </v-form>
                         </v-card-text>
@@ -144,6 +145,9 @@ export default {
             } else {
                 alert("❗ Attention\nSeules les images au format GIF sont autorisées !")
             }
+        },
+        backToForum(){
+            this.$router.push('/account/forum')
         }
     }
 }

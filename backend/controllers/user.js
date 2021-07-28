@@ -123,7 +123,7 @@ exports.getUserProfile = (req, res, next) => {
 
         // Préparer la requête SQL pour récupérer un utilisateur
         let sql = "SELECT last_name, first_name, email FROM users WHERE id = ?";
-        // Insérer les valeurs du corps de la requête POST dans la requête SQL
+        // Insérer les valeurs du corps de la requête GET dans la requête SQL
         let inserts = [userId];
         // Assembler la requête d'insertion SQL finale
         sql = mysql.format(sql, inserts);
@@ -152,7 +152,7 @@ exports.deleteOneUser = (req, res, next) => {
     if (Number(req.params.id) === userId) {
         // Préparer la requête SQL pour récupérer un utilisateur
         let sql = "DELETE FROM users WHERE id = ?";
-        // Insérer les valeurs du corps de la requête POST dans la requête SQL
+        // Insérer les valeurs du corps de la requête DELETE dans la requête SQL
         let inserts = [userId];
         // Assembler la requête d'insertion SQL finale
         sql = mysql.format(sql, inserts);

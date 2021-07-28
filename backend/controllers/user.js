@@ -55,7 +55,7 @@ exports.signup = (req, res, next) => {
                                     // En utilisant une chaîne secrète de développement temporaire (à remplacer par une chaîne aléatoire beaucoup plus longue)
                                     "RANDOM_TOKEN_SECRET",
                                     // En définissant la durée de validité du token (se reconnecter au bout de 24 heures)
-                                    { expiresIn: "2h" }
+                                    { expiresIn: "6h" }
                                 ),
                                 firstName: result[0].first_name,
                                 adminRole: result[0].admin_role
@@ -107,7 +107,7 @@ exports.login = (req, res, next) => {
                         // En utilisant une chaîne secrète de développement temporaire (à remplacer par une chaîne aléatoire beaucoup plus longue)
                         "RANDOM_TOKEN_SECRET",
                         // En définissant la durée de validité du token (se reconnecter au bout de 24 heures)
-                        { expiresIn: "2h" }
+                        { expiresIn: "6h" }
                     )
                 });
                 console.log("L'utilisateur " + req.body.email+ " ayant l'userId " + result[0].id + " est désormais connecté !");

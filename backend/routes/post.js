@@ -12,6 +12,7 @@ const postCtrl = require("../controllers/post");
 // Import des contrôleurs
 router.get("/", auth, postCtrl.getAllPosts);
 router.post("/", auth, multer, postCtrl.createPost);
+router.get("/:id", auth, postCtrl.getOnePost);
 
 // Permettre l'export du routeur sur d'autres fichiers
 module.exports = router;

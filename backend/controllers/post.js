@@ -69,3 +69,34 @@ exports.getAllPosts = (req, res, next) => {
         }
     })
 }
+
+exports.getOnePost = (req, res, next) => {
+    const postId = req.params.id;
+    // Préparer la requête SQL pour récupérer un utilisateur
+    let sql = `SELECT   posts.id, 
+                        posts.user_id, 
+                        posts.creation_date ,
+                        posts.title, 
+                        posts.description, 
+                        posts.image_url, 
+                        users.last_name, 
+                        users.first_name
+                FROM posts 
+                JOIN users ON posts.user_id = users.id 
+                WHERE posts.id = ?;`;
+    // Insérer les valeurs du corps de la requête POST dans la requête SQL
+    let inserts = [postId];
+    // Assembler la requête d'insertion SQL finale
+    sql = mysql.format(sql, inserts);
+    // Effectuer la requête auprès de la base de données
+    db.query(sql, function (error, post){
+        if (error) {
+            console.log("Post introuvable : " + error)
+            return res.status(400).json({ error : "Erreur, post introuvable !" })
+        } else {
+            console.log("Post " + post[0].id + " de l'utilisateur " + post[0].user_id + " trouvé !");
+            return res.status(200).json(post)
+        }
+    })
+
+}

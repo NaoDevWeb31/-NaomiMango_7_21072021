@@ -13,7 +13,7 @@ module.exports = (req, res, next) => {
             "=> Mot de passe insuffisant ! Les consignes n'ont pas été respectées",
             {"Content-Type": "application/json"})
             // Message de réponse
-        .end("Mot de passe incorrect !")
+        .end("Mot de passe incorrect => les consignes n'ont pas été respectées !")
     } else {
         next();
     }

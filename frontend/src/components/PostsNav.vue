@@ -18,7 +18,7 @@
                         <v-divider vertical></v-divider>
                         <v-list-item>
                             <v-list-item-content>
-                                <router-link class="black--text" to="">Mes posts</router-link>
+                                <router-link class="black--text" to="/account/forum/posts/user">Mes posts</router-link>
                             </v-list-item-content>
                         </v-list-item>
                     </v-list>

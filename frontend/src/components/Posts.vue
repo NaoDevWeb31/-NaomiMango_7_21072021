@@ -4,7 +4,7 @@
         <v-col v-if="posts.length === 0">
             <p class="text-center mx-auto my-15 text-h4">Le forum est vide !</p>
         </v-col>
-        <!-- POST -->
+        <!-- POSTS -->
         <v-col cols="12" class="mt-3" v-for="post in posts" :key="post.id">
             <v-card width="500" class="mx-auto rounded-lg">
                 <v-list-item five-line class="px-0 py-0">

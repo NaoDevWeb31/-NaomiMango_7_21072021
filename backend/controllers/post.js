@@ -70,6 +70,41 @@ exports.getAllPosts = (req, res, next) => {
     })
 }
 
+exports.getOneUserPosts = (req, res, next) => {
+    const token = req.headers.authorization.split(" ")[1];
+    const decodedToken = jwt.verify(token, "RANDOM_TOKEN_SECRET");
+    const userId = decodedToken.userId;
+    console.log(userId);
+
+    // Préparer la requête SQL pour récupérer un utilisateur
+    let sql = `SELECT   posts.user_id, 
+                        users.last_name, 
+                        users.first_name, 
+                        posts.id, 
+                        posts.creation_date , 
+                        posts.title, 
+                        posts.description, 
+                        posts.image_url 
+                FROM posts 
+                JOIN users ON posts.user_id = users.id 
+                WHERE posts.user_id = ? 
+                ORDER BY posts.creation_date DESC;`;
+    // Insérer les valeurs du corps de la requête POST dans la requête SQL
+    let inserts = [userId];
+    // Assembler la requête d'insertion SQL finale
+    sql = mysql.format(sql, inserts);
+    // Effectuer la requête auprès de la base de données
+    db.query(sql, function (error, posts){
+        if (error) {
+            console.log("Posts introuvables : " + error)
+            return res.status(400).json({ error : "Erreur, posts introuvables !" })
+        } else {
+            console.log(posts);
+            return res.status(200).json(posts)
+        }
+    })
+}
+
 exports.getOnePost = (req, res, next) => {
     const postId = req.params.id;
     // Préparer la requête SQL pour récupérer un utilisateur
@@ -98,5 +133,4 @@ exports.getOnePost = (req, res, next) => {
             return res.status(200).json(post)
         }
     })
-
 }

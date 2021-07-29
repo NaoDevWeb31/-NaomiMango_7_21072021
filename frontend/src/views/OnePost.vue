@@ -22,8 +22,9 @@
                     <v-col v-if="post == 0">
                         <p class="text-center mx-auto my-15 text-h4">Aucun post trouvé !</p>
                     </v-col>
-                    <!-- POST -->
+                    <!-- SI POST -->
                     <v-col cols="12" class="mt-3" v-if="post !== 0" :key="post.id">
+                        <!-- POST -->
                         <v-card width="600" class="mx-auto rounded-lg">
                             <v-list-item five-line class="px-0 py-0">
                                 <v-list-item-content class="px-0 py-0">
@@ -69,7 +70,8 @@
                                             Nombre de Dislike
                                         </div>
                                         <v-divider vertical class="red lighten-4 ml-4"></v-divider>
-                                        <div class="px-2 text-body-1">Commentaires (Nombre de commentaire)</div>
+                                        <div class="px-2 text-body-1" v-if="comments.length !== 0">Commentaires ({{comments.length}})</div>
+                                        <div class="px-2 text-body-1" v-else>Commentaires</div>
                                     </div>
                                     <!-- DIALOGUE DE MODIFICATION DE POST -->
                                     <v-dialog v-model="dialogUpdatePost" persistent max-width="600px">
@@ -99,11 +101,58 @@
                                 </v-list-item-content>
                             </v-list-item>
                         </v-card>
+                        <!-- BLOC DE COMMENTAIRES -->
+                        <div class="comment comment--sm comment--xs comment--xss comment--xsss mx-auto pa-3 rounded-b-xl d-flex flex-column blue-grey lighten-3">
+                            <!-- SI PAS DE COMMMENTAIRES -->
+                            <div v-if="comments == 0">
+                                <p class="text-center mx-auto mt-1 mb-3">Aucun commentaire trouvé !</p>
+                            </div>
+                            <!-- COMMENTAIRE -->
+                            <v-card width="550" class="mx-auto rounded-lg mb-3" v-for="comment in comments" :key="comment.id">
+                                <v-list-item five-line class="px-0 py-0">
+                                    <v-list-item-content class="px-0 py-0">
+                                        <!-- LIGNE 1 -->
+                                        <div v-if="sessionUserId == comment.user_id">
+                                            <div class="px-5">
+                                                <v-card-actions class="d-flex justify-space-between align-center">
+                                                    <v-btn color="red">
+                                                        <v-icon dense>mdi-comment-edit</v-icon>
+                                                        <span class="ml-1 d-none d-sm-inline">Modifier</span>
+                                                    </v-btn>
+                                                    <v-btn color="red" @click="deleteComment(comment.id)">
+                                                        <v-icon dense>mdi-delete</v-icon>
+                                                        <span class="ml-1 d-none d-sm-inline">Supprimer</span>
+                                                    </v-btn>
+                                                </v-card-actions>
+                                            </div>
+                                            <v-divider class="red lighten-4"></v-divider>
+                                        </div>
+                                        <!-- LIGNE 2 -->
+                                        <div class="px-5 py-0 text-overline">Publié par {{ comment.first_name }} {{ comment.last_name }} | Le {{ formatCreationDate(comment.creation_date) }}</div>
+                                        <v-divider class="red lighten-4 mb-3"></v-divider>
+                                        <!-- LIGNE 3 -->
+                                        <div class="px-5 mb-3">{{ comment.content }}</div>
+                                    </v-list-item-content>
+                                </v-list-item>
+                            </v-card>
+                            <!-- COMMENTER -->
+                            <v-card width="550" hei class="mx-auto rounded-lg mb-3 d-flex justify-space-between">
+                                <v-card-text class="pb-1">
+                                        <v-form ref="form" v-model="valid" >
+                                            <v-textarea rows="1" v-model="comment" ref="comment" :rules="commentRules" counter="320" label="Écrire un commentaire" type="text" color="black" outlined clearable clear-icon="mdi-eraser" auto-grow></v-textarea>
+                                        </v-form>
+                                </v-card-text>
+                                <v-card-actions class="pa-0 pb-4 mr-1">
+                                        <v-btn :disabled="!valid" color="green" icon @click="createComment()">
+                                            <v-icon>mdi-send</v-icon>
+                                        </v-btn>
+                                </v-card-actions>
+                            </v-card>
+                        </div>
                     </v-col>
                 </v-row>
             </v-container>
         </v-container>
-        
     </div>
 </template>
 
@@ -126,21 +175,27 @@ export default {
             sessionUserId: 0,
             sessionUserRole: 0,
             post: [],
+            comments: [],
             dialogUpdatePost: false,
             valid: true,
             title: '',
-            description: '',
-            image: '',
             titleRules: [
                 v => /^[A-Za-z\d\séÉèÈêÊàÀâÂôÔëËçÇùÙûÛîÎïÏ&!-',:]{2,70}$/.test(v) || "Titre incorrect !",
                 v => v.length <= 70 || '70 caractères maximum !',
             ],
+            description: '',
             descriptionRules: [
                 v => /^[a-zA-Z\d\séÉèÈêÊàÀâÂôÔëËçÇùÙûÛîÎïÏ&-_',!?:""«».]{10,320}$/.test(v) || "Description incorrect !",
                 v => v.length <= 320 || '320 caractères maximum !',
             ],
+            image: '',
             imageRules: [
                 value => !value || value.size < 3000000 || "L'image ne doit pas dépasser 3 MB !",
+            ],
+            comment: '',
+            commentRules: [
+                v => /^[a-zA-Z\d\séÉèÈêÊàÀâÂôÔëËçÇùÙûÛîÎïÏ&-_',!?:""«».]{10,320}$/.test(v) || "Commentaire incorrect !",
+                v => v.length <= 320 || '320 caractères maximum !',
             ],
         }
     },
@@ -156,6 +211,7 @@ export default {
             this.sessionUserId = decodedToken.userId; // l'ID de l'user pour la session = l'user Id décodé
             this.sessionUserRole = decodedToken.adminRole; // le rôle de l'user pour la session = le rôle admin décodé
             this.getOnePost();
+            this.getComments();
         }
     },
     methods: {
@@ -268,6 +324,64 @@ export default {
                 alert(error.response.data.error);
             })
         },
+        getComments(){
+            const postId = this.$route.params.id;
+            const token = JSON.parse(localStorage.user).token;
+            
+            axios.get(`http://localhost:3000/api/posts/${postId}/comments`, {headers: {Authorization: 'Bearer ' + token}})
+            .then(res => {
+                if (res.data[0] === undefined){
+                    this.comments = 0
+                } else {
+                    this.comments = res.data; // Les commentaires
+                    
+                    console.log("Les commentaires du post " + this.post.id + " sont bien affichés !");
+                }
+            })
+        },
+        createComment(){
+            const token = JSON.parse(localStorage.user).token;
+            //Les données à envoyer
+            const userId = this.sessionUserId;
+            const postId = this.post.id;
+            const content = this.$refs.comment.value;
+
+            axios.post(`http://localhost:3000/api/posts/${postId}/comments`,{
+                // Données à envoyer
+                    userId, postId, content
+                },
+                // En-têtes de requêtes
+                {
+                    headers: {Authorization: 'Bearer ' + token, 'Content-Type': 'application/json'}
+                })
+                .then(response => {
+                    // Si la connexion a bien été effectuée
+                    if (response.status === 201){
+                        this.comments = response.data; // Le commentaire
+                        alert(response.data.message)
+                        location.reload()
+                    }
+                })
+                .catch(error => {
+                    console.log(error.response.data.error);
+                    alert(error.response.data.error)
+                })
+        },
+        deleteComment(id){
+            const commentId = id;
+            const token = JSON.parse(localStorage.user).token;
+            axios.delete(`http://localhost:3000/api/posts/comments/${commentId}`, {headers: {Authorization: 'Bearer ' + token}})
+            .then((res) => {
+                if(res.status === 200) {
+                    alert(res.data.message);
+                    location.reload()
+                }
+            })
+            .catch(error => {
+                console.log(error.response.data.error);
+                alert(error.response.data.error);
+            })
+        },
         formatCreationDate(date){
             const event = new Date(date);
             const options = {year: 'numeric', month: 'long', day: 'numeric', hour: 'numeric', minute: 'numeric' };
@@ -276,3 +390,31 @@ export default {
     }
 }
 </script>
+
+<style lang="scss">
+
+    .comment{
+        width: 15rem;
+        &--xsss{
+            @media (min-width: 380px) and (max-width: 459px) {
+                width: 20rem;
+            }
+        }
+        &--xss{
+            @media (min-width: 460px) and (max-width: 549px) {
+                width: 25rem;
+            }
+        }
+        &--xs{
+            @media (min-width: 550px) and (max-width: 649px) {
+                width: 30rem;
+            }
+        }
+        &--sm{
+            @media (min-width: 650px) {
+                width: fit-content;
+            }
+        }
+    }
+    
+</style>

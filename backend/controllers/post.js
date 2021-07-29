@@ -240,3 +240,86 @@ exports.deletePost = (req, res, next) => {
         }
     });
 }
+
+exports.getComments = (req, res, next) => {
+    const token = req.headers.authorization.split(" ")[1];
+    const decodedToken = jwt.verify(token, "RANDOM_TOKEN_SECRET");
+    const userId = decodedToken.userId;
+    const postId = req.params.id;
+
+    // Préparer la requête SQL pour récupérer un post
+    let sql = `SELECT   comments.id, 
+                        users.last_name,
+                        users.first_name, 
+                        user_id, post_id, 
+                        comments.creation_date, 
+                        content 
+                FROM comments
+                JOIN users ON comments.user_id = users.id
+                WHERE post_id = ? 
+                ORDER BY comments.creation_date DESC;`;
+    // Insérer les valeurs du corps de la requête GET dans la requête SQL
+    let inserts = [postId];
+    // Assembler la requête d'insertion SQL finale
+    sql = mysql.format(sql, inserts);
+    // Effectuer la requête auprès de la base de données
+    db.query(sql, function (error, comments){
+        if (error) {
+            console.log("Commentaires introuvables : " + error)
+            return res.status(400).json({ error : "Erreur, commentaires introuvables !" })
+        } else {
+            console.log("Commentaires du post " + postId + " de l'utilisateur " + userId + " trouvés !");
+            return res.status(200).json(comments)
+        }
+    })
+}
+
+exports.createComment = (req, res, next) => {
+    const token = req.headers.authorization.split(" ")[1];
+    const decodedToken = jwt.verify(token, "RANDOM_TOKEN_SECRET");
+    const userId = decodedToken.userId;
+    const postId = req.body.postId;
+    const content = req.body.content;
+    // Préparer la requête SQL pour créer un post
+    let sql = "INSERT INTO comments (user_id, post_id, content) VALUES (?, ?, ?);";
+    // Insérer les valeurs du corps de la requête POST dans la requête SQL
+    let inserts = [userId, postId, content];
+    // Assembler la requête d'insertion SQL finale
+    sql = mysql.format(sql, inserts);
+    // Effectuer la requête auprès de la base de données
+    db.query(sql, function (error, comment){
+        if (error){
+            console.log("Échec de création du commentaire : " + error)
+            return res.status(400).json({ error: "Échec de création du commentaire !" });
+        } else {
+            console.log("Commentaire " + comment.id + " de l'utilisateur " + comment.user_id + "pour le post " + comment.post_id + " créé !")
+            return res.status(201).json({ message: "Le nouveau commentaire a été créé avec succès !" })
+            
+        }
+    })
+};
+
+exports.deleteComment = (req, res, next) => {
+    const token = req.headers.authorization.split(" ")[1];
+    const decodedToken = jwt.verify(token, "RANDOM_TOKEN_SECRET");
+    const userId = decodedToken.userId;
+    const commentId = req.params.id;
+
+    // Préparer la requête SQL pour supprimer le post
+    let sql = "DELETE FROM comments WHERE id = ? AND user_id = ?;";
+    // Insérer les valeurs du corps de la requête DELETE dans la requête SQL
+    let inserts = [commentId, userId];
+    // Assembler la requête d'insertion SQL finale
+    sql = mysql.format(sql, inserts);
+    // Effectuer la requête auprès de la base de données
+    
+    db.query(sql, function (error, comment) {
+        if (error) {
+            console.log("Tentative de suppression du commentaire échouée : " + error)
+            return res.status(400).json({ error: "Tentative de suppression du commentaire échouée !" })
+        } else {
+            console.log("Commentaire supprimé !")
+            return res.status(200).json({ message: "Commentaire supprimé !" })
+        }
+    });
+}

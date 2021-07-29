@@ -39,7 +39,7 @@ exports.createPost = (req, res, next) => {
 
 exports.getAllPosts = (req, res, next) => {
     // Préparer la requête SQL pour récupérer tous les posts
-    let sql = `SELECT   posts.id, 
+    let postSql = `SELECT   posts.id, 
                         posts.user_id, 
                         posts.creation_date ,
                         posts.title, 
@@ -51,21 +51,20 @@ exports.getAllPosts = (req, res, next) => {
                 JOIN users ON posts.user_id = users.id 
                 ORDER BY posts.creation_date DESC;`;
     // Effectuer la requête auprès de la base de données
-    db.query(sql, function (error, posts){
+    db.query(postSql, function (error, posts){
         if (error) {
             console.log("Posts introuvables : " + error)
             return res.status(400).json({ error : "Erreur, posts introuvables !" })
         } else {
-            console.log(posts);
             // Préparer la requête SQL pour le nombre de posts
-            sql = "SELECT COUNT(*) FROM posts;";
+            let countSql = `SELECT COUNT(*) FROM posts;`;
             // Effectuer la requête auprès de la base de données
-            db.query(sql, function (error, numberOfPosts){
+            db.query(countSql, function (error, numberOfPosts){
                 if (error){
                     console.log("Posts introuvables : " + error)
                     return res.status(400).json({ error : "Erreur, posts introuvables !" })
                 } else {
-                    console.log("Nombre de posts: " + numberOfPosts);
+                    console.log("Nombre de posts: " + JSON.stringify(numberOfPosts));
                     return res.status(200).json([posts, numberOfPosts])
                 }
             })
@@ -77,7 +76,6 @@ exports.getOneUserPosts = (req, res, next) => {
     const token = req.headers.authorization.split(" ")[1];
     const decodedToken = jwt.verify(token, "RANDOM_TOKEN_SECRET");
     const userId = decodedToken.userId;
-    console.log(userId);
 
     // Préparer la requête SQL pour récupérer les posts d'un utilisateur
     let sql = `SELECT   posts.user_id, 
@@ -102,7 +100,7 @@ exports.getOneUserPosts = (req, res, next) => {
             console.log("Posts introuvables : " + error)
             return res.status(400).json({ error : "Erreur, posts introuvables !" })
         } else {
-            console.log(posts);
+            console.log("Les " + posts.length + " posts de l'utilisateur " + userId + " ont été trouvés !");
             return res.status(200).json(posts)
         }
     })
@@ -143,53 +141,58 @@ exports.modifyPost = (req, res, next) => {
     const token = req.headers.authorization.split(" ")[1];
     const decodedToken = jwt.verify(token, "RANDOM_TOKEN_SECRET");
     const userId = decodedToken.userId;
+    //Récupérer les données envoyées
     const postId = req.params.id;
     const title = req.body.title;
     const description = req.body.description;
+    const postImage = req.file;
+    //Futur URL s'il y a une image
     let imageUrl = "";
-
+    // S'il y a une nouvelle image dans la requête
+    if (postImage){
+        imageUrl = `${req.protocol}://${req.get("host")}/images/${postImage.filename}`;
+    }
     // Préparer la requête SQL pour récupérer l'image
     let imageSql = "SELECT image_url FROM posts WHERE id = ?;";
-    // Préparer la requête SQL pour supprimer le post
-    let postSql = "UPDATE posts SET title = ?, description = ?, image_url = ? WHERE id = ? AND user_id = ?;";
+    // Préparer la requête SQL pour modifier le post
+    let postSql = `UPDATE posts SET title = ?, description = ?, image_url = ? WHERE id = ?;`;
     // Insérer les valeurs du corps de les requêtes PUT dans la requête SQL
     let imageInserts = [postId];
-    let postInserts = [title, description, imageUrl, postId, userId];
+    let postInserts = [title, description, imageUrl, postId];
     // Assembler les requêtes d'insertion SQL finales
     imageSql = mysql.format(imageSql, imageInserts);
     postSql = mysql.format(postSql, postInserts);
     
     // Effectuer la requête auprès de la base de données
-    // S'il y a une image
-    if (req.file){
-        db.query(imageSql, function (error, image) {
-            if (error) {
-                console.log("Tentative de suppression de l'image du post échouée : " + error)
-                return res.status(400).json({ error: "Tentative de suppression de l'image du post échouée !" })
-            } else {
-                if (image[0].image_url !== ""){
-                    // Utiliser le segment "/images/" de notre URL d'image pour extraire le nom du fichier à supprimer
-                    const filename = image[0].image_url.split("/images/")[1];
-                    // Passer comme paramètres le fichier à supprimer et le callback à exécuter une fois ce fichier supprimé
-                    fs.unlink(`images/${filename}`, () => {
-                    });
-                }
-                console.log("Image supprimé !");
-            }
-        })
-        imageUrl = `${req.protocol}://${req.get("host")}/images/${req.file.filename}`;
-    }
-    //Qu'il y ait une image ou pas
-    db.query(postSql, function (error, post) {
-        if (error){
-            console.log("Échec de modification du post : " + error)
-            return res.status(400).json({ error: "Échec de modification du post !" });
+    db.query(imageSql, function (error, image) {
+        if (error) {
+            console.log("Tentative de suppression de l'image du post échouée : " + error)
+            return res.status(400).json({ error: "Tentative de suppression de l'image du post échouée !" })
         } else {
-            console.log(post);
-            console.log("Post " + postId + " de l'utilisateur " + userId + " modifié !")
-            return res.status(200).json({ message: "Le post a été modifié avec succès !" })
+            let formerImageURL = image[0].image_url;// URL de l'ancienne image récupérée s'il y en a une
+            if (formerImageURL !== ""){ // Supprimer l'ancienne image du post
+                // Utiliser le segment "/images/" de notre URL d'image pour extraire le nom du fichier à supprimer
+                const filename = formerImageURL.split("/images/")[1];
+                // Passer comme paramètres le fichier à supprimer et le callback à exécuter une fois ce fichier supprimé
+                fs.unlink(`images/${filename}`, () => {
+                });
+                console.log("Image supprimé !");
+            } else {
+                console.log("Pas d'image à supprimer !");
+            }
+            //Qu'il y ait une image ou pas
+            db.query(postSql, function (error, post) {
+                if (error){
+                    console.log("Échec de modification du post : " + error)
+                    return res.status(400).json({ error: "Échec de modification du post !" });
+                } else {
+                    console.log(post);
+                    console.log("Post " + postId + " de l'utilisateur " + userId + " modifié !")
+                    return res.status(200).json({ message: "Le post a été modifié avec succès !" })
+                }
+            });
         }
-    });
+    })
 };
 
 exports.deletePost = (req, res, next) => {
@@ -214,14 +217,17 @@ exports.deletePost = (req, res, next) => {
             console.log("Tentative de suppression de l'image du post échouée : " + error)
             return res.status(400).json({ error: "Tentative de suppression de l'image du post échouée !" })
         } else {
-            if (image[0].image_url !== ""){
+            let imageUrl = image[0].image_url;
+            if (imageUrl !== ""){
                 // Utiliser le segment "/images/" de notre URL d'image pour extraire le nom du fichier à supprimer
-                const filename = image[0].image_url.split("/images/")[1];
+                const filename = imageUrl.split("/images/")[1];
                 // Passer comme paramètres le fichier à supprimer et le callback à exécuter une fois ce fichier supprimé
                 fs.unlink(`images/${filename}`, () => {
                 });
+                console.log("Image supprimé !");
+            } else {
+                console.log("Pas d'image à supprimer !");
             }
-            console.log("Image supprimé !");
             db.query(postSql, function (error, post) {
                 if (error) {
                     console.log("Tentative de suppression du post échouée : " + error)

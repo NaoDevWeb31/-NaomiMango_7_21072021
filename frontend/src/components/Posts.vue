@@ -60,8 +60,8 @@
                         <!-- DIALOGUE DE MODIFICATION DE POST -->
                         <v-dialog v-model="dialogUpdatePost" persistent max-width="600px">
                             <v-card>
-                                <v-card-title>
-                                    <span class="text-h5 text-center">Modifier votre post</span>
+                                <v-card-title class="d-flex justify-center">
+                                    <span class="text-h5 mb-2">Modifier votre post</span>
                                 </v-card-title>
                                 <v-card-text>
                                     <v-form ref="form" v-model="valid" >
@@ -76,7 +76,7 @@
                                     <v-btn color="blue darken-1" text @click="dialogUpdatePost = false">
                                         Annuler
                                     </v-btn>
-                                    <v-btn color="green darken-1" text :disabled="!valid" @click="updatePost(post.id)">
+                                    <v-btn color="green darken-1" text :disabled="!valid" @click="updatePost()">
                                         Modifier
                                     </v-btn>
                                 </v-card-actions>
@@ -158,6 +158,7 @@ export default {
             })
             .then(res => {
                 this.posts = res.data[0]; // Tous les posts
+                console.log("Tous les posts s'affichent !");
             })
         },
         dialogUpdatePostUp(postTitle, postDescription, postImageUrl, postId){
@@ -171,19 +172,17 @@ export default {
             // Afficher les anciennes données du post
             this.title = postTitle
             this.description = postDescription;
-            console.log(postImageUrl);
             this.image = postImageUrl;
         },
-        updatePost(id){
+        updatePost(){
             // Les données nécessaires
-            const postId = id;
+            const postId = this.posts.id;
             const token = JSON.parse(localStorage.user).token;
             //Les données à envoyer
             const userId = this.sessionUserId;
             const title = this.title;
             const description = this.description;
             const image = this.image;
-            console.log(image.files);
 
             // Récupérer l'extension de l'image quand il y en a une
             if (image !== ""){

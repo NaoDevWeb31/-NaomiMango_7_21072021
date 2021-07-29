@@ -24,7 +24,7 @@ CREATE TABLE `posts` (
   -- User ID du créateur du post
   `user_id` INT UNSIGNED NOT NULL,
   -- Date de création du post
-  `creation_date` TIMESTAMP NOT NULL DEFAULT (CURRENT_TIMESTAMP),
+  `creation_date` creation_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   -- Titre du post
   `title` VARCHAR(70) NOT NULL,
   -- Description du post

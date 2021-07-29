@@ -30,7 +30,7 @@
                                     <!-- LIGNE 1 -->
                                     <div class="px-5 py-1">
                                         <v-card-actions class="d-flex justify-space-between align-center">
-                                            <v-btn color="red">
+                                            <v-btn color="red" @click.stop="dialogUpdatePostUp(post.title, post.description, post.image_url, post.id)">
                                                 <v-icon>mdi-file-document-edit</v-icon>
                                                 <span class="ml-1 d-none d-sm-inline">Modifier</span>
                                             </v-btn>
@@ -71,6 +71,31 @@
                                         <v-divider vertical class="red lighten-4 ml-4"></v-divider>
                                         <div class="px-2 text-body-1">Commentaires (Nombre de commentaire)</div>
                                     </div>
+                                    <!-- DIALOGUE DE MODIFICATION DE POST -->
+                                    <v-dialog v-model="dialogUpdatePost" persistent max-width="600px">
+                                        <v-card>
+                                            <v-card-title class="d-flex justify-center">
+                                                <span class="text-h5 mb-2">Modifier votre post</span>
+                                            </v-card-title>
+                                            <v-card-text>
+                                                <v-form ref="form" v-model="valid" >
+                                                    <v-text-field v-model="title" ref="title" :rules="titleRules" counter="70" label="Titre du post (*)" type="text" prepend-icon="mdi-format-title" color="black" outlined clearable clear-icon="mdi-eraser" auto-grow></v-text-field>
+                                                    <v-textarea v-model="description" ref="description" :rules="descriptionRules" counter="320" label="Description du post (*)" type="text" prepend-icon="mdi-text" color="black" outlined clearable clear-icon="mdi-eraser" auto-grow></v-textarea>
+                                                    <v-file-input v-model="image" ref="image" :rules="imageRules" accept="image/gif" label="Image du post" type="file" filled prepend-icon="mdi-camera" show-size color="black"></v-file-input>
+                                                </v-form>
+                                                <small>Champs requis (*)</small>
+                                            </v-card-text>
+                                            <v-card-actions>
+                                                <v-spacer></v-spacer>
+                                                <v-btn color="blue darken-1" text @click="dialogUpdatePost = false">
+                                                    Annuler
+                                                </v-btn>
+                                                <v-btn color="green darken-1" text :disabled="!valid" @click="updatePost()">
+                                                    Modifier
+                                                </v-btn>
+                                            </v-card-actions>
+                                        </v-card>
+                                    </v-dialog>
                                 </v-list-item-content>
                             </v-list-item>
                         </v-card>
@@ -97,6 +122,22 @@ export default {
             //Par défaut
             accedAccount: false, // Accès non autorisé à cette page
             posts: [],
+            dialogUpdatePost: false,
+            valid: true,
+            title: '',
+            description: '',
+            image: '',
+            titleRules: [
+                v => /^[A-Za-z\d\séÉèÈêÊàÀâÂôÔëËçÇùÙûÛîÎïÏ&!-',:]{2,70}$/.test(v) || "Titre incorrect !",
+                v => v.length <= 70 || '70 caractères maximum !',
+            ],
+            descriptionRules: [
+                v => /^[a-zA-Z\d\séÉèÈêÊàÀâÂôÔëËçÇùÙûÛîÎïÏ&-_',!?:""«».]{10,320}$/.test(v) || "Description incorrect !",
+                v => v.length <= 320 || '320 caractères maximum !',
+            ],
+            imageRules: [
+                value => !value || value.size < 3000000 || "L'image ne doit pas dépasser 3 MB !",
+            ],
         }
     },
     created(){
@@ -132,6 +173,76 @@ export default {
                 this.posts = res.data; // Tous les posts de l'utilisateur
                 console.log("Les posts de l'utilisateur " + this.posts[0].user_id + " sont bien affichés !");
             })
+        },
+        dialogUpdatePostUp(postTitle, postDescription, postImageUrl, postId){
+            // Récupérer les anciennes données du post
+            this.posts.title = postTitle;
+            this.posts.description = postDescription;
+            this.posts.image_url = postImageUrl;
+            this.posts.id = postId;
+            // Activer la boîte de dialogue
+            this.dialogUpdatePost = true;
+            // Afficher les anciennes données du post
+            this.title = postTitle
+            this.description = postDescription;
+            this.image = postImageUrl;
+        },
+        updatePost(){
+            // Les données nécessaires
+            const postId = this.posts.id;
+            const token = JSON.parse(localStorage.user).token;
+            //Les données à envoyer
+            const userId = this.sessionUserId;
+            const title = this.title;
+            const description = this.description;
+            const image = this.image;
+
+            // Récupérer l'extension de l'image quand il y en a une
+            if (image !== ""){
+                var fileName = image.name;
+                var lastDot = fileName.lastIndexOf(".") + 1;
+                var extensionFile = fileName.slice(lastDot, fileName.length).toLowerCase();
+            }
+
+            if (extensionFile == "gif" || image === undefined || image === ""){
+                const formDataPost = new FormData();
+                // Ajouter des nouvelles paires clé/valeur
+                formDataPost.append("postId", postId);
+                formDataPost.append("userId", userId);
+                formDataPost.append("title", title);
+                formDataPost.append("description", description);
+                formDataPost.append("image", image);
+
+                for (var pair of formDataPost.entries()) {
+                    console.log(pair[0]+ ', ' + pair[1]); 
+                }
+
+                axios.put(`http://localhost:3000/api/posts/${postId}`,
+                // Données à envoyer
+                    formDataPost
+                ,
+                // En-têtes de requête
+                {
+                    headers: {
+                    'Authorization': 'Bearer ' + token
+                    }
+                })
+                
+                .then(res => {
+                    if (res.status === 200){
+                        alert(res.data.message);
+                        this.dialogUpdatePost = false;
+                        location.reload()
+                    }
+                })
+                .catch(error => {
+                    console.log(error.response.data.error);
+                    alert(error.response.data.error);
+                    setTimeout(function(){location.reload()}, 60000)
+                });
+            } else {
+                alert("❗ Attention\nSeules les images au format GIF sont autorisées !")
+            }
         },
         deletePost(id){
             const postId = id;

@@ -20,13 +20,13 @@
                 </div>
             </router-link>
             <v-spacer></v-spacer>
-            <router-link to=".">
+            <!-- BOUTON PAGE -->
+            <router-link to="." v-if="rightLocation() == true">
                 <div class="mx-6">
                     <v-btn outline>
                         <v-icon>mdi-arrow-left</v-icon>
                         <span class="d-none d-sm-inline ml-1">Page précédente</span>
                     </v-btn>
-                    
                 </div>
             </router-link>
             <!-- BOUTON INSCRIPTION -->
@@ -47,6 +47,27 @@ export default {
         deconnect(){
             localStorage.clear();
             this.$router.push('/')
+        },
+        rightLocation(){
+            let locationURL = location.href;
+            //Page qui n'a pas besoin du headerLogged
+            let accountPageUrl = "http://localhost:8080/account";
+            
+            if (locationURL != accountPageUrl){
+                return true
+            }
+        },//À REVISITER
+        notOnePostPage(){
+            //Récupérer l'id du post dans l'URL
+            let locationURL = location.href;
+            let postId = locationURL.split("posts/")[1];
+            let postIdNumber = parseInt(postId);
+            //Page qui n'a pas besoin du headerLogged
+            let postPageUrl = "http://localhost:8080/account/forum/posts/" + postIdNumber;// URL avec id
+            
+            if (locationURL != postPageUrl){
+                return true
+            }
         }
     },
 }

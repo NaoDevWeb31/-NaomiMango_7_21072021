@@ -47,7 +47,7 @@ CREATE TABLE `comments` (
   -- ID du post commenté
   `post_id` INT UNSIGNED NOT NULL,
   -- Date de création du post
-  `creation_date` TIMESTAMP NOT NULL DEFAULT (CURRENT_TIMESTAMP),
+  `creation_date` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   -- Contenu du commentaire
   `content` TEXT NOT NULL,
   -- Clé primaire => ID du commentaire

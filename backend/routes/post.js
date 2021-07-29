@@ -10,12 +10,17 @@ const multer = require("../middleware/multer-config");
 const postCtrl = require("../controllers/post");
 
 // Import des contrôleurs
+                //POSTS
 router.get("/", auth, postCtrl.getAllPosts);
 router.post("/", auth, multer, postCtrl.createPost);
 router.get("/user", auth, postCtrl.getOneUserPosts);
 router.get("/:id", auth, postCtrl.getOnePost);
 router.put("/:id", auth, multer, postCtrl.modifyPost);
 router.delete("/:id", auth, postCtrl.deletePost);
+                // COMMENTAIRES
+router.get("/:id/comments", auth, postCtrl.getComments);
+router.post("/:id/comments", auth, postCtrl.createComment);
+router.delete("/comments/:id", auth, postCtrl.deleteComment);
 
 // Permettre l'export du routeur sur d'autres fichiers
 module.exports = router;

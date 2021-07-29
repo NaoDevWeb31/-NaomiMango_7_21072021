@@ -55,7 +55,7 @@
                                 Nombre de Dislike
                             </div>
                             <v-divider vertical class="red lighten-4 ml-4"></v-divider>
-                            <div class="px-2 text-body-1">Commentaires (Nombre de commentaire)</div>
+                            <div class="px-2 text-body-1">Commentaires ({{comments.length}})</div>
                         </div>
                         <!-- DIALOGUE DE MODIFICATION DE POST -->
                         <v-dialog v-model="dialogUpdatePost" persistent max-width="600px">
@@ -103,19 +103,20 @@ export default {
             sessionUserId: 0,
             sessionUserRole: 0,
             posts: [],
+            comments: [],
             dialogUpdatePost: false,
             valid: true,
             title: '',
-            description: '',
-            image: '',
             titleRules: [
                 v => /^[A-Za-z\d\séÉèÈêÊàÀâÂôÔëËçÇùÙûÛîÎïÏ&!-',:]{2,70}$/.test(v) || "Titre incorrect !",
                 v => v.length <= 70 || '70 caractères maximum !',
             ],
+            description: '',
             descriptionRules: [
                 v => /^[a-zA-Z\d\séÉèÈêÊàÀâÂôÔëËçÇùÙûÛîÎïÏ&-_',!?:""«».]{10,320}$/.test(v) || "Description incorrect !",
                 v => v.length <= 320 || '320 caractères maximum !',
             ],
+            image: '',
             imageRules: [
                 value => !value || value.size < 3000000 || "L'image ne doit pas dépasser 3 MB !",
             ],
@@ -159,6 +160,21 @@ export default {
             .then(res => {
                 this.posts = res.data[0]; // Tous les posts
                 console.log("Tous les posts s'affichent !");
+                // À TRAVAILLER
+                for (const post of this.posts) {
+                    const postId = post.id;
+                    console.log(post.id);
+                    
+                    axios.get(`http://localhost:3000/api/posts/${postId}/comments`, {headers: {Authorization: 'Bearer ' + token}})
+                    .then(res => {
+                        if (res.data === undefined){
+                            this.comments = 0
+                        } else {
+                            console.log("Les commentaires du post " + postId + " sont bien affichés !");
+                            this.comments = res.data; // Les commentaires
+                        }
+                    })
+                }
             })
         },
         dialogUpdatePostUp(postTitle, postDescription, postImageUrl, postId){

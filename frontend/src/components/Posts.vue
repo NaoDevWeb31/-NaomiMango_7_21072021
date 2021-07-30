@@ -55,7 +55,7 @@
                                 Nombre de Dislike
                             </div>
                             <v-divider vertical class="red lighten-4 ml-4"></v-divider>
-                            <div class="px-2 text-body-1">Commentaires ({{comments.length}})</div>
+                            <div class="px-2 text-body-1">Commentaires ({{post.commentsNumber}})</div>
                         </div>
                         <!-- DIALOGUE DE MODIFICATION DE POST -->
                         <v-dialog v-model="dialogUpdatePost" persistent max-width="600px">
@@ -103,7 +103,6 @@ export default {
             sessionUserId: 0,
             sessionUserRole: 0,
             posts: [],
-            comments: [],
             dialogUpdatePost: false,
             valid: true,
             title: '',
@@ -160,21 +159,6 @@ export default {
             .then(res => {
                 this.posts = res.data[0]; // Tous les posts
                 console.log("Tous les posts s'affichent !");
-                // À TRAVAILLER
-                for (const post of this.posts) {
-                    const postId = post.id;
-                    console.log(post.id);
-                    
-                    axios.get(`http://localhost:3000/api/posts/${postId}/comments`, {headers: {Authorization: 'Bearer ' + token}})
-                    .then(res => {
-                        if (res.data === undefined){
-                            this.comments = 0
-                        } else {
-                            console.log("Les commentaires du post " + postId + " sont bien affichés !");
-                            this.comments = res.data; // Les commentaires
-                        }
-                    })
-                }
             })
         },
         dialogUpdatePostUp(postTitle, postDescription, postImageUrl, postId){

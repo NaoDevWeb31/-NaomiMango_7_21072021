@@ -20,7 +20,7 @@
                 </div>
             </router-link>
             <v-spacer></v-spacer>
-            <!-- BOUTON PAGE -->
+            <!-- BOUTON PAGE PRÉCEDÉNTE -->
             <router-link to="." v-if="rightLocation() == true">
                 <div class="mx-6">
                     <v-btn outline>
@@ -30,12 +30,12 @@
                 </div>
             </router-link>
             <!-- BOUTON INSCRIPTION -->
-                <div class="d-flex align-center">
+            <div class="d-flex align-center">
                     <v-btn v-on:click="deconnect()" color="dark">
                         <span class="d-none d-sm-inline mr-1">Se déconnecter</span>
                         <v-icon>mdi-logout-variant</v-icon>
                     </v-btn>
-                </div>
+            </div>
         </v-app-bar>
     </div>
 </template>
@@ -49,26 +49,20 @@ export default {
             this.$router.push('/')
         },
         rightLocation(){
-            let locationURL = location.href;
-            //Page qui n'a pas besoin du headerLogged
-            let accountPageUrl = "http://localhost:8080/account";
+            var isRightLocation = false;
+            const currentLocationURL = location.href;
+            //Pages qui n'ont pas besoin du bouton "Page précédente"
+            const accountPageUrl = "http://localhost:8080/account";
+            const postPageUrl = "http://localhost:8080/account/forum/posts/"
             
-            if (locationURL != accountPageUrl){
-                return true
+            if (currentLocationURL != accountPageUrl){
+                isRightLocation = true;
             }
-        },//À REVISITER
-        notOnePostPage(){
-            //Récupérer l'id du post dans l'URL
-            let locationURL = location.href;
-            let postId = locationURL.split("posts/")[1];
-            let postIdNumber = parseInt(postId);
-            //Page qui n'a pas besoin du headerLogged
-            let postPageUrl = "http://localhost:8080/account/forum/posts/" + postIdNumber;// URL avec id
-            
-            if (locationURL != postPageUrl){
-                return true
+            if (currentLocationURL.includes(postPageUrl)){
+                isRightLocation = false;
             }
-        }
+            return isRightLocation
+        },
     },
 }
 </script>

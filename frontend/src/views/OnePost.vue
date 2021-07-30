@@ -70,8 +70,7 @@
                                             Nombre de Dislike
                                         </div>
                                         <v-divider vertical class="red lighten-4 ml-4"></v-divider>
-                                        <div class="px-2 text-body-1" v-if="comments.length !== 0">Commentaires ({{comments.length}})</div>
-                                        <div class="px-2 text-body-1" v-else>Commentaires</div>
+                                        <div class="px-2 text-body-1">Commentaires ({{ post.commentsNumber }})</div>
                                     </div>
                                     <!-- DIALOGUE DE MODIFICATION DE POST -->
                                     <v-dialog v-model="dialogUpdatePost" persistent max-width="600px">

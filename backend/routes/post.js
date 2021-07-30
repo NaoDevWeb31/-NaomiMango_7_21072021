@@ -18,7 +18,7 @@ router.get("/:id", auth, postCtrl.getOnePost);
 router.put("/:id", auth, multer, postCtrl.modifyPost);
 router.delete("/:id", auth, postCtrl.deletePost);
                 // COMMENTAIRES
-router.get("/:id/comments", auth, postCtrl.getComments);
+router.get("/:id/comments", auth, postCtrl.getOnePostComments);
 router.post("/:id/comments", auth, postCtrl.createComment);
 router.delete("/comments/:id", auth, postCtrl.deleteComment);
 

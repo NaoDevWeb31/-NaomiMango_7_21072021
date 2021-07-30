@@ -39,17 +39,22 @@ exports.createPost = (req, res, next) => {
 
 exports.getAllPosts = (req, res, next) => {
     // Préparer la requête SQL pour récupérer tous les posts
-    let postSql = `SELECT   posts.id, 
-                        posts.user_id, 
-                        posts.creation_date ,
-                        posts.title, 
-                        posts.description, 
-                        posts.image_url, 
-                        users.last_name, 
-                        users.first_name
-                FROM posts 
-                JOIN users ON posts.user_id = users.id 
-                ORDER BY posts.creation_date DESC;`;
+    let postSql =`SELECT   posts.user_id, 
+                            users.last_name, 
+                            users.first_name, 
+                            posts.id, 
+                            posts.creation_date ,
+                            posts.title, 
+                            posts.description, 
+                            posts.image_url,
+                            (SELECT COUNT(if(post_id = posts.id, 1, NULL)) 
+                                FROM comments 
+                                WHERE post_id = posts.id
+                            ) 
+                            AS commentsNumber
+                    FROM posts 
+                    JOIN users ON posts.user_id = users.id 
+                    ORDER BY posts.creation_date DESC;`;
     // Effectuer la requête auprès de la base de données
     db.query(postSql, function (error, posts){
         if (error) {
@@ -85,7 +90,12 @@ exports.getOneUserPosts = (req, res, next) => {
                         posts.creation_date , 
                         posts.title, 
                         posts.description, 
-                        posts.image_url 
+                        posts.image_url ,
+                        (SELECT COUNT(if(post_id = posts.id, 1, NULL)) 
+                            FROM comments 
+                            WHERE post_id = posts.id
+                        ) 
+                        AS commentsNumber
                 FROM posts 
                 JOIN users ON posts.user_id = users.id 
                 WHERE posts.user_id = ? 
@@ -110,14 +120,19 @@ exports.getOnePost = (req, res, next) => {
     const postId = req.params.id;
 
     // Préparer la requête SQL pour récupérer un post
-    let sql = `SELECT   posts.id, 
-                        posts.user_id, 
-                        posts.creation_date ,
+    let sql = `SELECT   posts.user_id, 
+                        users.last_name, 
+                        users.first_name, 
+                        posts.id, 
+                        posts.creation_date, 
                         posts.title, 
                         posts.description, 
-                        posts.image_url, 
-                        users.last_name, 
-                        users.first_name
+                        posts.image_url,
+                        (SELECT COUNT(if(post_id = posts.id, 1, NULL)) 
+                            FROM comments 
+                            WHERE post_id = posts.id
+                        ) 
+                        AS commentsNumber
                 FROM posts 
                 JOIN users ON posts.user_id = users.id 
                 WHERE posts.id = ?;`;
@@ -241,7 +256,7 @@ exports.deletePost = (req, res, next) => {
     });
 }
 
-exports.getComments = (req, res, next) => {
+exports.getOnePostComments = (req, res, next) => {
     const token = req.headers.authorization.split(" ")[1];
     const decodedToken = jwt.verify(token, "RANDOM_TOKEN_SECRET");
     const userId = decodedToken.userId;
@@ -251,7 +266,8 @@ exports.getComments = (req, res, next) => {
     let sql = `SELECT   comments.id, 
                         users.last_name,
                         users.first_name, 
-                        user_id, post_id, 
+                        user_id, 
+                        post_id, 
                         comments.creation_date, 
                         content 
                 FROM comments

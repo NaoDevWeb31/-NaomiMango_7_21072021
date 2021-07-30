@@ -20,7 +20,7 @@
                     <!-- NOM -->
                     <v-row class="d-flex 3ustify-space-between">
                         <v-col col="3">
-                            <p class="black--text data grey lighten-3">Nom de famille</p>
+                            <p class="black--text data grey lighten-3">Nom</p>
                         </v-col>
                         <v-col col="9">
                             <p class="black--text data grey lighten-3 text-center">{{ userProfile.lastName }}</p>

@@ -19,8 +19,8 @@
                     <router-link to="/account/profile">
                         <v-card>
                             <v-img class="white--text align-end" max-height="350px" :src="require('../assets/Profile.jpg')">
-                                <v-card-title>
-                                    <h3 class="headline mb-0 text-center">Mon Profil</h3>
+                                <v-card-title class="red">
+                                    <h2 class="headline mb-0 text-center h3">Mon Profil</h2>
                                 </v-card-title>
                             </v-img>
                         </v-card>
@@ -31,8 +31,8 @@
                     <router-link to="/account/forum">
                         <v-card>
                             <v-img class="white--text align-end" max-height="350px" :src="require('../assets/Forum.jpg')">
-                                <v-card-title>
-                                    <h3 class="headline mb-0 text-center">Forum</h3>
+                                <v-card-title class="red">
+                                    <h2 class="headline mb-0 text-center h3">Forum</h2>
                                 </v-card-title>
                             </v-img>
                         </v-card>

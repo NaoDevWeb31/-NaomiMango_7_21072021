@@ -76,7 +76,7 @@
                                     <v-dialog v-model="dialogUpdatePost" persistent max-width="600px">
                                         <v-card>
                                             <v-card-title class="d-flex justify-center">
-                                                <span class="text-h5 mb-2">Modifier votre post</span>
+                                                <span class="text-h5 mb-2">Modifier votre post :</span>
                                             </v-card-title>
                                             <v-card-text>
                                                 <v-form ref="form" v-model="valid" >
@@ -114,7 +114,7 @@
                                         <div v-if="sessionUserId == comment.user_id">
                                             <div class="px-5">
                                                 <v-card-actions class="d-flex justify-space-between align-center">
-                                                    <v-btn color="red">
+                                                    <v-btn color="red" @click.stop="dialogUpdateCommentUp(comment.content, comment.id)">
                                                         <v-icon dense>mdi-comment-edit</v-icon>
                                                         <span class="ml-1 d-none d-sm-inline">Modifier</span>
                                                     </v-btn>
@@ -131,6 +131,29 @@
                                         <v-divider class="red lighten-4 mb-3"></v-divider>
                                         <!-- LIGNE 3 -->
                                         <div class="px-5 mb-3">{{ comment.content }}</div>
+                                        <!-- DIALOGUE DE MODIFICATION DE COMMENTAIRE -->
+                                        <v-dialog v-model="dialogUpdateComment" persistent max-width="600px">
+                                            <v-card>
+                                                <v-card-title class="d-flex justify-center">
+                                                    <span class="text-h5 mb-3">Modifier votre commentaire :</span>
+                                                </v-card-title>
+                                                <v-card-text class="pb-0">
+                                                    <v-form ref="form" v-model="valid" >
+                                                        <v-textarea rows="1" v-model="updatedComment" ref="updatedComment" :rules="commentRules" counter="320" label="Le commentaire (*)" type="text" prepend-icon="mdi-comment-text" color="black" outlined clearable clear-icon="mdi-eraser" auto-grow></v-textarea>
+                                                    </v-form>
+                                                    <small>Champs requis (*)</small>
+                                                </v-card-text>
+                                                <v-card-actions class="pt-0">
+                                                    <v-spacer></v-spacer>
+                                                    <v-btn color="blue darken-1" text @click="dialogUpdateComment = false">
+                                                        Annuler
+                                                    </v-btn>
+                                                    <v-btn color="green darken-1" text :disabled="!valid" @click="updateComment()">
+                                                        Modifier
+                                                    </v-btn>
+                                                </v-card-actions>
+                                            </v-card>
+                                        </v-dialog>
                                     </v-list-item-content>
                                 </v-list-item>
                             </v-card>
@@ -176,6 +199,7 @@ export default {
             post: [],
             comments: [],
             dialogUpdatePost: false,
+            dialogUpdateComment: false,
             valid: true,
             title: '',
             titleRules: [
@@ -196,6 +220,7 @@ export default {
                 v => /^[a-zA-Z\d\séÉèÈêÊàÀâÂôÔëËçÇùÙûÛîÎïÏ&-_',!?:""«».]{10,320}$/.test(v) || "Commentaire incorrect !",
                 v => v.length <= 320 || '320 caractères maximum !',
             ],
+            updatedComment: '',
         }
     },
     created(){
@@ -239,7 +264,7 @@ export default {
             })
         },
         dialogUpdatePostUp(postTitle, postDescription, postImageUrl, postId){
-            // Récupérer les anciennes données du post
+            // Récupérer les données du post
             this.post.title = postTitle;
             this.post.description = postDescription;
             this.post.image_url = postImageUrl;
@@ -358,6 +383,42 @@ export default {
                     if (response.status === 201){
                         this.comments = response.data; // Le commentaire
                         alert(response.data.message)
+                        location.reload()
+                    }
+                })
+                .catch(error => {
+                    console.log(error.response.data.error);
+                    alert(error.response.data.error)
+                })
+        },
+        dialogUpdateCommentUp(commentContent, commentId){
+            // Récupérer les données du commentaires
+            this.comments.content = commentContent;
+            this.comments.id = commentId;
+            // Activer la boîte de dialogue
+            this.dialogUpdateComment = true;
+            // Afficher les anciennes données du commentaire
+            this.updatedComment = commentContent
+        },
+        updateComment(){
+            // Les données nécessaires
+            const commentId = this.comments.id;
+            const token = JSON.parse(localStorage.user).token;
+            //Les données à envoyer
+            const content = this.updatedComment;
+
+            axios.put(`http://localhost:3000/api/posts/comments/${commentId}`,{
+                // Données à envoyer
+                    commentId, content
+                },
+                // En-têtes de requêtes
+                {
+                    headers: {Authorization: 'Bearer ' + token, 'Content-Type': 'application/json'}
+                })
+                .then(response => {
+                    if (response.status === 200){
+                        alert(response.data.message);
+                        this.dialogUpdateComment = false;
                         location.reload()
                     }
                 })

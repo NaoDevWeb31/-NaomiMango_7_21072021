@@ -20,6 +20,7 @@ router.delete("/:id", auth, postCtrl.deletePost);
                 // COMMENTAIRES
 router.get("/:id/comments", auth, postCtrl.getOnePostComments);
 router.post("/:id/comments", auth, postCtrl.createComment);
+router.put("/comments/:id", auth, postCtrl.modifyComment);
 router.delete("/comments/:id", auth, postCtrl.deleteComment);
 
 // Permettre l'export du routeur sur d'autres fichiers

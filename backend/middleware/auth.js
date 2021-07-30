@@ -16,7 +16,7 @@ module.exports = (req, res, next) => {
             // Si après comparaison, il  correspond à celui extrait du token
         } else {
             // L'utilisateur est authentifié (tout fonctionne)
-            console.log("User ID valable, authentification réussie !");
+            console.log("User ID valable !");
             next();
         }
     } catch {

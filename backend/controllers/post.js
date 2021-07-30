@@ -315,6 +315,33 @@ exports.createComment = (req, res, next) => {
     })
 };
 
+exports.modifyComment = (req, res, next) => {
+    const token = req.headers.authorization.split(" ")[1];
+    const decodedToken = jwt.verify(token, "RANDOM_TOKEN_SECRET");
+    const userId = decodedToken.userId;
+    //Récupérer les données envoyées
+    const commentId = req.params.id;
+    const content = req.body.content;
+    // Préparer la requête SQL pour modifier le commentaire
+    let sql = `UPDATE comments SET content = ? WHERE id = ?;`;
+    // Insérer les valeurs du corps de la requête PUT dans la requête SQL
+    let inserts = [content, commentId];
+    // Assembler la requête d'insertion SQL finale
+    sql = mysql.format(sql, inserts);
+    
+    // Effectuer la requête auprès de la base de données
+    db.query(sql, function (error, comment) {
+        if (error){
+            console.log("Échec de modification du commentaire : " + error)
+            return res.status(400).json({ error: "Échec de modification du commentaire !" });
+        } else {
+            console.log(comment);
+            console.log("Commentaire " + commentId + " de l'utilisateur " + userId + " modifié !")
+            return res.status(200).json({ message: "Le commentaire a été modifié avec succès !" })
+        }
+    });
+};
+
 exports.deleteComment = (req, res, next) => {
     const token = req.headers.authorization.split(" ")[1];
     const decodedToken = jwt.verify(token, "RANDOM_TOKEN_SECRET");

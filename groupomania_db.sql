@@ -69,7 +69,7 @@ CREATE TABLE `likes` (
   `user_id` INT UNSIGNED NOT NULL,
   -- ID du post liké/disliké
   `post_id` INT UNSIGNED NOT NULL,
-  -- Disliké -1/Annulé 0/Liké 1
+  -- Disliké -2/Annulé 1/Liké 2
   `opinion` INT DEFAULT NULL,
   -- Clé primaire => ID de l'opinion
   PRIMARY KEY (`id`),

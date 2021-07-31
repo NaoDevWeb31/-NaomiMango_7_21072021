@@ -118,6 +118,9 @@ exports.getOneUserPosts = (req, res, next) => {
 
 exports.getOnePost = (req, res, next) => {
     const postId = req.params.id;
+    const token = req.headers.authorization.split(" ")[1];
+    const decodedToken = jwt.verify(token, "RANDOM_TOKEN_SECRET");
+    const userId = decodedToken.userId;
 
     // Préparer la requête SQL pour récupérer un post
     let sql = `SELECT   posts.user_id, 
@@ -127,17 +130,25 @@ exports.getOnePost = (req, res, next) => {
                         posts.creation_date, 
                         posts.title, 
                         posts.description, 
-                        posts.image_url,
+                        posts.image_url, 
                         (SELECT COUNT(if(post_id = posts.id, 1, NULL)) 
                             FROM comments 
                             WHERE post_id = posts.id
-                        ) 
-                        AS commentsNumber
+                        ) AS commentsNumber, 
+                        (SELECT COUNT(if(opinion = 2, 1, NULL)) 
+                            FROM likes 
+                            WHERE post_id = posts.id
+                        ) AS likesNumber, 
+                        (SELECT COUNT(if(opinion = -2, 1, NULL)) 
+                            FROM likes 
+                            WHERE post_id = posts.id
+                        ) AS dislikesNumber, 
+                        (SELECT opinion FROM likes WHERE user_id = ? AND posts.id = likes.post_id) AS opinion 
                 FROM posts 
                 JOIN users ON posts.user_id = users.id 
                 WHERE posts.id = ?;`;
     // Insérer les valeurs du corps de la requête GET dans la requête SQL
-    let inserts = [postId];
+    let inserts = [userId, postId];
     // Assembler la requête d'insertion SQL finale
     sql = mysql.format(sql, inserts);
     // Effectuer la requête auprès de la base de données
@@ -365,4 +376,120 @@ exports.deleteComment = (req, res, next) => {
             return res.status(200).json({ message: "Commentaire supprimé !" })
         }
     });
+}
+
+exports.ratePost = (req, res, next) => {
+    const token = req.headers.authorization.split(" ")[1];
+    const decodedToken = jwt.verify(token, "RANDOM_TOKEN_SECRET");
+    const userId = decodedToken.userId;
+    const postId = req.body.postId;
+    const opinion = req.body.opinion;
+    const alreadyRated = req.body.alreadyRated;
+
+    switch (opinion) {
+        case 1: // Like/dislike annulé
+            try {
+                // Préparer la requête SQL pour annuler un like ou dislike sur un post
+                let sql = `UPDATE likes SET opinion = 1 WHERE post_id = ? AND user_id = ?;`;
+                // Insérer les valeurs du corps de la requête POST dans la requête SQL
+                let inserts = [postId, userId];
+                // Assembler la requête d'insertion SQL finale
+                sql = mysql.format(sql, inserts);
+                // Effectuer la requête auprès de la base de données
+                db.query(sql, function (error, opinion){
+                    if (error){
+                        console.log("Échec de modification de l'opinion (annulé) : " + error)
+                        return res.status(400).json({ error: "Échec de modification de l'opinion (annulé) !" });
+                    } else {
+                        console.log("Opinion annulée sur le post " + postId + " par l'utilisateur " + userId + " !")
+                        return res.status(200).json({ message: "Opinion annulée !" })
+                    }
+                })
+            } catch (error) {
+                return res.status(400).json({ error: "Échec de modification de l'opinion (annulé) !" });
+            }
+            break;
+        case 2: // Like
+            try {
+                if (alreadyRated){
+                    // Préparer la requête SQL pour liker un post
+                    let sql = `UPDATE likes SET opinion = 2 WHERE post_id = ? AND user_id = ?;`;
+                    // Insérer les valeurs du corps de la requête POST dans la requête SQL
+                    let inserts = [postId, userId];
+                    // Assembler la requête d'insertion SQL finale
+                    sql = mysql.format(sql, inserts);
+                    // Effectuer la requête auprès de la base de données
+                    db.query(sql, function (error, opinion){
+                        if (error){
+                            console.log("Échec de modification de l'opinion (like) : " + error)
+                            return res.status(400).json({ error: "Échec de modification de l'opinion (like) !" });
+                        } else {
+                            console.log("Post " + postId + " liké par l'utilisateur " + userId + " !")
+                            return res.status(200).json({ message: "Post liké !" })
+                        }
+                    })
+                } else {
+                    // Préparer la requête SQL pour liker un post
+                    let sql = `INSERT INTO likes (post_id, user_id, opinion) VALUES (?, ?, 2);`;
+                    // Insérer les valeurs du corps de la requête POST dans la requête SQL
+                    let inserts = [postId, userId];
+                    // Assembler la requête d'insertion SQL finale
+                    sql = mysql.format(sql, inserts);
+                    // Effectuer la requête auprès de la base de données
+                    db.query(sql, function (error, opinion){
+                        if (error){
+                            console.log("Échec de modification de l'opinion (like) : " + error)
+                            return res.status(400).json({ error: "Échec de modification de l'opinion (like) !" });
+                        } else {
+                            console.log("Post " + postId + " liké par l'utilisateur " + userId + " !")
+                            return res.status(200).json({ message: "Post liké !" })
+                        }
+                    })
+                }
+            } catch (error) {
+                return res.status(400).json({ error: "Échec de modification de l'opinion (like) !" });
+            }
+            break;
+        case -2: // Dislike
+            try {
+                if (alreadyRated){
+                    // Préparer la requête SQL pour disliker un post
+                    let sql = `UPDATE likes SET opinion = -2 WHERE post_id = ? AND user_id = ?;`;
+                    // Insérer les valeurs du corps de la requête POST dans la requête SQL
+                    let inserts = [postId, userId];
+                    // Assembler la requête d'insertion SQL finale
+                    sql = mysql.format(sql, inserts);
+                    // Effectuer la requête auprès de la base de données
+                    db.query(sql, function (error, opinion){
+                        if (error){
+                            console.log("Échec de modification de l'opinion (dislike) : " + error)
+                            return res.status(400).json({ error: "Échec de modification de l'opinion (dislike) !" });
+                        } else {
+                            console.log("Post " + postId + " disliké par l'utilisateur " + userId + " !")
+                            return res.status(200).json({ message: "Post disliké !" })
+                        }
+                    })
+                } else {
+                    // Préparer la requête SQL pour disliker un post
+                    let sql = `INSERT INTO likes (post_id, user_id, opinion) VALUES (?, ?, -2);`;
+                    // Insérer les valeurs du corps de la requête POST dans la requête SQL
+                    let inserts = [postId, userId];
+                    // Assembler la requête d'insertion SQL finale
+                    sql = mysql.format(sql, inserts);
+                    // Effectuer la requête auprès de la base de données
+                    db.query(sql, function (error, opinion){
+                        if (error){
+                            console.log("Échec de modification de l'opinion (dislike) : " + error)
+                            return res.status(400).json({ error: "Échec de modification de l'opinion (dislike) !" });
+                        } else {
+                            console.log("Post " + postId + " disliké par l'utilisateur " + userId + " !")
+                            return res.status(200).json({ message: "Post disliké !" })
+                        }
+                    })
+                }
+            } catch (error) {
+                return res.status(400).json({ error: "Échec de modification de l'opinion (dislike) !" });
+            }
+            break;
+    }
 }

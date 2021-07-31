@@ -22,6 +22,8 @@ router.get("/:id/comments", auth, postCtrl.getOnePostComments);
 router.post("/:id/comments", auth, postCtrl.createComment);
 router.put("/comments/:id", auth, postCtrl.modifyComment);
 router.delete("/comments/:id", auth, postCtrl.deleteComment);
+                // LIKES/DISLIKES
+router.post("/:id/opinion", auth, postCtrl.ratePost);
 
 // Permettre l'export du routeur sur d'autres fichiers
 module.exports = router;

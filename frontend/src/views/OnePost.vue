@@ -57,17 +57,17 @@
                                     <!-- LIGNE 4 -->
                                     <div class="d-flex flex-md-row align-center mb-1">
                                         <div class="px-2 text-body-1">
-                                            <v-btn text icon color="black lighten-2">
-                                                <v-icon color="green">mdi-thumb-up</v-icon>
+                                            <v-btn text icon :color="likeColor.color" @click="modifyLike()">
+                                                <v-icon>mdi-thumb-up</v-icon>
                                             </v-btn>
-                                            Nombre de Like
+                                            {{ post.likesNumber }}
                                         </div>
                                         <v-divider vertical class="red lighten-4"></v-divider>
                                         <div class="pl-2 text-body-1">
-                                            <v-btn text icon color="black lighten-2">
-                                                <v-icon color="red darken-1">mdi-thumb-down</v-icon>
+                                            <v-btn text icon :color="dislikeColor.color" @click="modifyDislike()">
+                                                <v-icon>mdi-thumb-down</v-icon>
                                             </v-btn>
-                                            Nombre de Dislike
+                                            {{ post.dislikesNumber }}
                                         </div>
                                         <v-divider vertical class="red lighten-4 ml-4"></v-divider>
                                         <div class="px-2 text-body-1">Commentaires ({{ post.commentsNumber }})</div>
@@ -198,6 +198,8 @@ export default {
             sessionUserRole: 0,
             post: [],
             comments: [],
+            likeColor: [],
+            dislikeColor: [],
             dialogUpdatePost: false,
             dialogUpdateComment: false,
             valid: true,
@@ -259,6 +261,18 @@ export default {
                     this.post = 0
                 } else {
                     this.post = res.data[0]; // Le post
+                    if(this.post.opinion === null || this.post.opinion === 1) {// Pas d'opinion OU opinion annulée
+                        this.likeColor = { color: "green lighten-2" };
+                        this.dislikeColor = { color: "red lighten-3" };
+                    }
+                    if(this.post.opinion === 2) {// Post liké
+                        this.likeColor = { color: "green darken-2" };
+                        this.dislikeColor = { color: "red lighten-3" };
+                    }
+                    if(this.post.opinion === -2) {// Post disliké
+                        this.likeColor = { color: "green lighten-2" };
+                        this.dislikeColor = { color: "red accent-4" };
+                    }
                     console.log("Le post " + this.post.id + " est bien affiché !");
                 }
             })
@@ -347,6 +361,178 @@ export default {
                 console.log(error.response.data.error);
                 alert(error.response.data.error);
             })
+        },
+        modifyLike(){
+            const token = JSON.parse(localStorage.user).token;
+            //Récupérer les données du post à envoyer
+            const userId = this.sessionUserId;
+            const postId = this.post.id;
+            const userOpinion = this.post.opinion;
+            if (userOpinion === 2){// Post déjà liké => souhaite l'annuler
+                const opinion = 1;
+                const alreadyRated = true;
+
+                axios.post(`http://localhost:3000/api/posts/${postId}/opinion`,{
+                // Données à envoyer
+                    userId, postId, opinion, alreadyRated
+                },
+                // En-têtes de requêtes
+                {
+                    headers: {Authorization: 'Bearer ' + token, 'Content-Type': 'application/json'}
+                })
+                .then(response => {
+                    this.post.opinion = 1; // Like annulé
+                    this.post.likesNumber --;
+                    this.likeColor = { color: "green lighten-2" };
+                    console.log(response.data.message);
+                })
+            } else {
+                if (userOpinion === null){// Post jamais liké auparavant => souhaite liker
+                    const opinion = 2;
+                    const alreadyRated = false;
+
+                    axios.post(`http://localhost:3000/api/posts/${postId}/opinion`,{
+                        // Données à envoyer
+                        userId, postId, opinion, alreadyRated
+                    },
+                        // En-têtes de requêtes
+                    {
+                        headers: {Authorization: 'Bearer ' + token, 'Content-Type': 'application/json'}
+                    })
+                    .then(response => {
+                        this.post.opinion = 2; // Post liké
+                        this.post.likesNumber ++;
+                        this.likeColor = { color: "green darken-2" };
+                        console.log(response.data.message);
+                    })
+                }
+                if (userOpinion === 1){// Post déjà liké/disliké auparavant puis annulé => souhaite liker
+                const opinion = 2;
+                const alreadyRated = true;
+
+                    axios.post(`http://localhost:3000/api/posts/${postId}/opinion`,{
+                        // Données à envoyer
+                        userId, postId, opinion, alreadyRated
+                    },
+                        // En-têtes de requêtes
+                    {
+                        headers: {Authorization: 'Bearer ' + token, 'Content-Type': 'application/json'}
+                    })
+                    .then(response => {
+                        this.post.opinion = 2; // Post liké
+                        this.post.likesNumber ++;
+                        this.likeColor = { color: "green darken-2" };
+                        console.log(response.data.message);
+                    })
+                }
+                if (userOpinion === -2){// Post déjà disliké auparavant => souhaite liker
+                const opinion = 2;
+                const alreadyRated = true;
+
+                    axios.post(`http://localhost:3000/api/posts/${postId}/opinion`,{
+                        // Données à envoyer
+                        userId, postId, opinion, alreadyRated
+                    },
+                        // En-têtes de requêtes
+                    {
+                        headers: {Authorization: 'Bearer ' + token, 'Content-Type': 'application/json'}
+                    })
+                    .then(response => {
+                        this.post.opinion = 2; // Post liké
+                        this.post.dislikesNumber --;
+                        this.post.likesNumber ++;
+                        this.dislikeColor = { color: "red lighten-3" };
+                        this.likeColor = { color: "green darken-2" };
+                        console.log(response.data.message);
+                    })
+                }
+            }
+        },
+        modifyDislike(){
+            const token = JSON.parse(localStorage.user).token;
+            //Récupérer les données du post à envoyer
+            const userId = this.sessionUserId;
+            const postId = this.post.id;
+            const userOpinion = this.post.opinion;
+            if (userOpinion === -2){// Post déjà disliké => souhaite l'annuler
+                const opinion = 1;
+                const alreadyRated = true;
+
+                axios.post(`http://localhost:3000/api/posts/${postId}/opinion`,{
+                // Données à envoyer
+                    userId, postId, opinion, alreadyRated
+                },
+                // En-têtes de requêtes
+                {
+                    headers: {Authorization: 'Bearer ' + token, 'Content-Type': 'application/json'}
+                })
+                .then(response => {
+                    this.post.opinion = 1; // Dislike annulé
+                    this.post.dislikesNumber --;
+                    this.dislikeColor = { color: "red lighten-3" };
+                        console.log(response.data.message);
+                })
+            } else {
+                if (userOpinion === null){// Post jamais disliké auparavant => souhaite disliker
+                    const opinion = -2;
+                    const alreadyRated = false;
+
+                    axios.post(`http://localhost:3000/api/posts/${postId}/opinion`,{
+                        // Données à envoyer
+                        userId, postId, opinion, alreadyRated
+                    },
+                        // En-têtes de requêtes
+                    {
+                        headers: {Authorization: 'Bearer ' + token, 'Content-Type': 'application/json'}
+                    })
+                    .then(response => {
+                        this.post.opinion = -2; // Post disliké
+                        this.post.dislikesNumber ++;
+                        this.dislikeColor = { color: "red accent-4" };
+                        console.log(response.data.message);
+                    })
+                }
+                if (userOpinion === 1){// Post déjà liké/disliké auparavant puis annulé => souhaite disliker
+                const opinion = -2;
+                const alreadyRated = true;
+
+                    axios.post(`http://localhost:3000/api/posts/${postId}/opinion`,{
+                        // Données à envoyer
+                        userId, postId, opinion, alreadyRated
+                    },
+                        // En-têtes de requêtes
+                    {
+                        headers: {Authorization: 'Bearer ' + token, 'Content-Type': 'application/json'}
+                    })
+                    .then(response => {
+                        this.post.opinion = -2; // Post disliké
+                        this.post.dislikesNumber ++;
+                        this.dislikeColor = { color: "red accent-4" };
+                        console.log(response.data.message);
+                    })
+                }
+                if (userOpinion === 2){// Post déjà liké auparavant => souhaite disliker
+                const opinion = -2;
+                const alreadyRated = true;
+
+                    axios.post(`http://localhost:3000/api/posts/${postId}/opinion`,{
+                        // Données à envoyer
+                        userId, postId, opinion, alreadyRated
+                    },
+                        // En-têtes de requêtes
+                    {
+                        headers: {Authorization: 'Bearer ' + token, 'Content-Type': 'application/json'}
+                    })
+                    .then(response => {
+                        this.post.opinion = -2; // Post disliké
+                        this.post.likesNumber --;
+                        this.post.dislikesNumber ++;
+                        this.likeColor = { color: "green lighten-2" };
+                        this.dislikeColor = { color: "red accent-4" };
+                        console.log(response.data.message);
+                    })
+                }
+            }
         },
         getComments(){
             const postId = this.$route.params.id;

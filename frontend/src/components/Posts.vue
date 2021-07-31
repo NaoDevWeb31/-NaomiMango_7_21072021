@@ -84,7 +84,6 @@
                                 </v-card-actions>
                             </v-card>
                         </v-dialog>
-
                     </v-list-item-content>
                 </v-list-item>
             </v-card>

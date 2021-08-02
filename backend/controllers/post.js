@@ -95,13 +95,22 @@ exports.getOneUserPosts = (req, res, next) => {
                             FROM comments 
                             WHERE post_id = posts.id
                         ) 
-                        AS commentsNumber
+                        AS commentsNumber, 
+                        (SELECT COUNT(if(opinion = 2, 1, NULL)) 
+                            FROM likes 
+                            WHERE post_id = posts.id
+                        ) AS likesNumber, 
+                        (SELECT COUNT(if(opinion = -2, 1, NULL)) 
+                            FROM likes 
+                            WHERE post_id = posts.id
+                        ) AS dislikesNumber, 
+                        (SELECT opinion FROM likes WHERE user_id = ? AND posts.id = likes.post_id) AS opinion 
                 FROM posts 
                 JOIN users ON posts.user_id = users.id 
                 WHERE posts.user_id = ? 
                 ORDER BY posts.creation_date DESC;`;
     // Insérer les valeurs du corps de la requête GET dans la requête SQL
-    let inserts = [userId];
+    let inserts = [userId, userId];
     // Assembler la requête d'insertion SQL finale
     sql = mysql.format(sql, inserts);
     // Effectuer la requête auprès de la base de données

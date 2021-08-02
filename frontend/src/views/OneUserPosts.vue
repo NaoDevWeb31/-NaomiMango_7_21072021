@@ -56,17 +56,27 @@
                                     <!-- LIGNE 4 -->
                                     <div class="d-flex flex-md-row align-center mb-1">
                                         <div class="px-2 text-body-1">
-                                            <v-btn text icon color="black lighten-2">
-                                                <v-icon color="green">mdi-thumb-up</v-icon>
+                                            <!-- SI PAS DE LIKE -->
+                                            <v-btn text icon class="btn-opinion" color="green darken-2" v-if="post.likesNumber > 0">
+                                                <v-icon>mdi-thumb-up</v-icon>
                                             </v-btn>
-                                            Nombre de Like
+                                            <!-- SI LIKE -->
+                                            <v-btn text icon class="btn-opinion" color="green lighten-2" v-else>
+                                                <v-icon>mdi-thumb-up</v-icon>
+                                            </v-btn>
+                                            {{ post.likesNumber }}
                                         </div>
                                         <v-divider vertical class="red lighten-4"></v-divider>
                                         <div class="pl-2 text-body-1">
-                                            <v-btn text icon color="black lighten-2">
-                                                <v-icon color="red darken-1">mdi-thumb-down</v-icon>
+                                            <!-- SI PAS DE DISLIKE -->
+                                            <v-btn text icon class="btn-opinion" color="red accent-4" v-if="post.dislikesNumber > 0">
+                                                <v-icon>mdi-thumb-down</v-icon>
                                             </v-btn>
-                                            Nombre de Dislike
+                                            <!-- SI DISLIKE -->
+                                            <v-btn text icon class="btn-opinion" color="red lighten-3" v-else>
+                                                <v-icon>mdi-thumb-down</v-icon>
+                                            </v-btn>
+                                            {{ post.dislikesNumber }}
                                         </div>
                                         <v-divider vertical class="red lighten-4 ml-4"></v-divider>
                                         <router-link class="black--text" :to="{ name : 'OnePost', params: { id: post.id }}">
@@ -269,3 +279,11 @@ export default {
     }
 }
 </script>
+
+<style lang="scss">
+
+    .btn-opinion{
+        pointer-events: none;
+    }
+
+</style>

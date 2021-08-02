@@ -38,6 +38,10 @@ exports.createPost = (req, res, next) => {
 };
 
 exports.getAllPosts = (req, res, next) => {
+    const token = req.headers.authorization.split(" ")[1];
+    const decodedToken = jwt.verify(token, "RANDOM_TOKEN_SECRET");
+    const userId = decodedToken.userId;
+
     // Préparer la requête SQL pour récupérer tous les posts
     let postSql =`SELECT   posts.user_id, 
                             users.last_name, 
@@ -51,10 +55,23 @@ exports.getAllPosts = (req, res, next) => {
                                 FROM comments 
                                 WHERE post_id = posts.id
                             ) 
-                            AS commentsNumber
+                            AS commentsNumber, 
+                            (SELECT COUNT(if(opinion = 2, 1, NULL)) 
+                                FROM likes 
+                                WHERE post_id = posts.id
+                            ) AS likesNumber, 
+                            (SELECT COUNT(if(opinion = -2, 1, NULL)) 
+                                FROM likes 
+                                WHERE post_id = posts.id
+                            ) AS dislikesNumber, 
+                            (SELECT opinion FROM likes WHERE user_id = ? AND posts.id = likes.post_id) AS opinion 
                     FROM posts 
                     JOIN users ON posts.user_id = users.id 
                     ORDER BY posts.creation_date DESC;`;
+    // Insérer les valeurs du corps de la requête GET dans la requête SQL
+    let inserts = [userId];
+    // Assembler la requête d'insertion SQL finale
+    postSql = mysql.format(postSql, inserts);
     // Effectuer la requête auprès de la base de données
     db.query(postSql, function (error, posts){
         if (error) {

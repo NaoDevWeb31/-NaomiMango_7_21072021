@@ -1,11 +1,7 @@
 <template>
     <div class="header">
         <!-- BARRE DE NAVIGATION -->
-        <v-app-bar
-        app
-        color="red"
-        dark
-        >
+        <v-app-bar app color="red" dark>
         <!-- LOGO -->
             <router-link to="/">
                 <div class="d-flex align-center">
@@ -23,7 +19,7 @@
             <!-- BOUTON PAGE PRÉCEDÉNTE -->
             <router-link to="." v-if="rightLocation() == true">
                 <div class="mx-6">
-                    <v-btn outline>
+                    <v-btn>
                         <v-icon>mdi-arrow-left</v-icon>
                         <span class="d-none d-sm-inline ml-1">Page précédente</span>
                     </v-btn>
@@ -31,10 +27,10 @@
             </router-link>
             <!-- BOUTON INSCRIPTION -->
             <div class="d-flex align-center">
-                    <v-btn v-on:click="deconnect()" color="dark">
-                        <span class="d-none d-sm-inline mr-1">Se déconnecter</span>
-                        <v-icon>mdi-logout-variant</v-icon>
-                    </v-btn>
+                <v-btn v-on:click="deconnect()" color="dark">
+                    <span class="d-none d-sm-inline mr-1">Se déconnecter</span>
+                    <v-icon>mdi-logout-variant</v-icon>
+                </v-btn>
             </div>
         </v-app-bar>
     </div>

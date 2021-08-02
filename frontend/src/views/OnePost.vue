@@ -29,14 +29,14 @@
                             <v-list-item five-line class="px-0 py-0">
                                 <v-list-item-content class="px-0 py-0">
                                     <!-- LIGNE 1 -->
-                                    <div v-if="sessionUserId == post.user_id">
+                                    <div v-if="sessionUserId === post.user_id || sessionUserRole === 2">
                                         <div class="px-5 py-1">
                                             <v-card-actions class="d-flex justify-space-between align-center">
-                                                <v-btn color="red" @click.stop="dialogUpdatePostUp(post.title, post.description, post.image_url, post.id)">
+                                                <v-btn color="red" @click.stop="dialogUpdatePostUp(post.title, post.description, post.image_url, post.id)" v-if="sessionUserId === post.user_id">
                                                     <v-icon>mdi-file-document-edit</v-icon>
                                                     <span class="ml-1 d-none d-sm-inline">Modifier</span>
                                                 </v-btn>
-                                                <v-btn color="red" @click="deletePost(post.id)">
+                                                <v-btn color="red" @click="deletePost(post.id)" v-if="sessionUserId === post.user_id || sessionUserRole === 2">
                                                     <v-icon>mdi-delete</v-icon>
                                                     <span class="ml-1 d-none d-sm-inline">Supprimer</span>
                                                 </v-btn>
@@ -111,14 +111,14 @@
                                 <v-list-item five-line class="px-0 py-0">
                                     <v-list-item-content class="px-0 py-0">
                                         <!-- LIGNE 1 -->
-                                        <div v-if="sessionUserId == comment.user_id">
+                                        <div v-if="sessionUserId === comment.user_id || sessionUserRole === 2">
                                             <div class="px-5">
                                                 <v-card-actions class="d-flex justify-space-between align-center">
-                                                    <v-btn color="red" @click.stop="dialogUpdateCommentUp(comment.content, comment.id)">
+                                                    <v-btn color="red" @click.stop="dialogUpdateCommentUp(comment.content, comment.id)" v-if="sessionUserId === comment.user_id">
                                                         <v-icon dense>mdi-comment-edit</v-icon>
                                                         <span class="ml-1 d-none d-sm-inline">Modifier</span>
                                                     </v-btn>
-                                                    <v-btn color="red" @click="deleteComment(comment.id)">
+                                                    <v-btn color="red" @click="deleteComment(comment.id)" v-if="sessionUserId === comment.user_id || sessionUserRole === 2">
                                                         <v-icon dense>mdi-delete</v-icon>
                                                         <span class="ml-1 d-none d-sm-inline">Supprimer</span>
                                                     </v-btn>

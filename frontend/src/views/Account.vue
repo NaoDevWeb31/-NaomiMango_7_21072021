@@ -7,8 +7,8 @@
         <v-container class="fill-height" fluid v-if="accedAccount">
             <v-row>
                 <v-col>
-                    <h1 class="text-center text-h3">
-                        Bienvenue sur votre compte<br/>
+                    <h1 class="text-center text-h5 text-sm-h3">
+                        Bienvenue sur votre compte
                         <span>{{firstName}}</span> !
                     </h1>
                 </v-col>
@@ -19,8 +19,8 @@
                     <router-link to="/account/profile">
                         <v-card>
                             <v-img class="white--text align-end" max-height="350px" :src="require('../assets/Profile.jpg')">
-                                <v-card-title class="red">
-                                    <h2 class="headline mb-0 text-center h3">Mon Profil</h2>
+                                <v-card-title class="red py-2 py-sm-4">
+                                    <h2 class="headline headline--xs mb-0 text-center h3">Mon Profil</h2>
                                 </v-card-title>
                             </v-img>
                         </v-card>
@@ -31,8 +31,8 @@
                     <router-link to="/account/forum">
                         <v-card>
                             <v-img class="white--text align-end" max-height="350px" :src="require('../assets/Forum.jpg')">
-                                <v-card-title class="red">
-                                    <h2 class="headline mb-0 text-center h3">Forum</h2>
+                                <v-card-title class="red py-2 py-sm-4">
+                                    <h2 class="headline headline--xs mb-0 text-center h3">Forum</h2>
                                 </v-card-title>
                             </v-img>
                         </v-card>
@@ -78,3 +78,13 @@ export default {
     },
 }
 </script>
+
+<style lang="scss">
+
+    .v-application .headline--xs{
+            @media (max-width: 450px) {
+                font-size: 1rem !important;
+            }
+    }
+    
+</style>

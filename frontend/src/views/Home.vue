@@ -1,27 +1,22 @@
 <template>
   <div class="home">
-    <v-container>
+    <v-container class="bg-img">
       <Header/>
       <v-row class="text-center">
-        <v-col cols="12">
-          <!-- LOGO -->
-          <v-img :src="require('../assets/icon-left-font.png')" class="my-3" contain height="200"/>
-        </v-col>
-
         <!-- TITRE -->
-        <v-col class="mb-2">
-          <h1 class="display-2 font-weight-bold mb-3">
+        <v-col class="py-16 mt-md-10">
+          <h1 class="text-h5 text-sm-h4 text-md-h3 font-weight-bold mt-10 mt-sm-16 mb-3">
             Bienvenue sur le réseau interne de Groupomania !
           </h1>
-          <p class="headline font-weight-regular">
+          <p class="text-h7 text-sm-h6 text-sm-h5 font-weight-regular mt-5">
             Échangez en toute liberté entre collègues !
             <br>Partagez et commentez vos GIFs.
           </p>
         </v-col>
       </v-row>
-      <v-row class="text-center mb-4">
+      <v-row class="text-center d-flex flex-column align-center flex-sm-row">
         <!-- BOUTON INSCRIPTION -->
-        <v-col cols="6">
+        <v-col cols="12" sm="6">
           <router-link to="/signup">
             <v-btn x-large color="red">
               <span class="mr-2">Inscrivez-vous</span>
@@ -30,7 +25,7 @@
           </router-link>
         </v-col>
         <!-- BOUTON CONNEXION -->
-        <v-col cols="6">
+        <v-col cols="12" sm="6">
           <router-link to="/login">
             <v-btn x-large color="red">
               <span class="mr-2">Connectez-vous</span>
@@ -53,3 +48,15 @@ import Header from '../components/Header.vue'
     },
   }
 </script>
+
+<style lang="scss">
+  
+  .bg-img{
+      background-image: url("../assets/icon.png");
+      background-position: 50% 50%;
+      background-attachment: fixed;
+      background-size: 50%;
+      min-height: 35rem;
+  }
+
+</style>

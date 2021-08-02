@@ -58,7 +58,7 @@ export default {
                 isRightLocation = false;
             }
             return isRightLocation
-        },
+        }
     },
 }
 </script>

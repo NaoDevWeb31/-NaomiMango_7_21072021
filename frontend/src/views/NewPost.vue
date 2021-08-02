@@ -11,7 +11,7 @@
             <!-- TITRE -->
                 <v-row class="my-2">
                     <v-col>
-                        <h1 class="text-center text-h3">
+                        <h1 class="text-center text-h4 text-sm-h3">
                             Créez un Nouveau Post
                         </h1>
                     </v-col>

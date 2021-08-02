@@ -2,7 +2,7 @@
     <v-row class="d-flex flex-column" v-if="accedAccount">
         <!-- SI PAS DE POSTS -->
         <v-col v-if="postsNumber === 0">
-            <p class="text-center mx-auto my-15 text-h4">Le forum est vide !</p>
+            <p class="text-center mx-auto my-15 text-h5 text-sm-h4">Le forum est vide !</p>
         </v-col>
         <!-- POSTS -->
         <v-col cols="12" class="mt-3" v-for="post in posts" :key="post.id">
@@ -66,7 +66,11 @@
                             </div>
                             <v-divider vertical class="red lighten-4 ml-4"></v-divider>
                             <router-link class="black--text" :to="{ name : 'OnePost', params: { id: post.id }}">
-                                <div class="px-2 text-body-1">Commentaires ({{post.commentsNumber}})</div>
+                                <div class="px-2 text-body-1">
+                                    <v-icon class="d-inline d-sm-none">mdi-comment</v-icon>
+                                    <span class="d-none d-sm-inline">Commentaires </span>
+                                    ({{post.commentsNumber}})
+                                </div>
                             </router-link>
                         </div>
                         <!-- DIALOGUE DE MODIFICATION DE POST -->

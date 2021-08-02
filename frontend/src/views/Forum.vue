@@ -10,7 +10,7 @@
             <v-container class="fill-height" fluid>
                 <v-row class="my-2">
                     <v-col>
-                        <h1 class="text-center text-h3">
+                        <h1 class="text-center text-h4 text-sm-h3">
                             Bienvenue sur le Forum !
                         </h1>
                     </v-col>
@@ -53,8 +53,6 @@ export default {
             } else { // Si l'user est bien stocké dans le localStorage
                 this.accedAccount = true;
                 console.log("Accès autorisé à l'utilisateur !");
-                const user = JSON.parse(localStorage.getItem("user"));
-                user
             }
         },
     },

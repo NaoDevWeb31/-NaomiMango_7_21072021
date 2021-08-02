@@ -11,7 +11,7 @@
                 <!-- TITRE -->
                 <v-row class="my-2">
                     <v-col>
-                        <h1 class="text-center text-h3">
+                        <h1 class="text-center text-h4 text-sm-h3">
                             Bienvenue sur le Forum !
                         </h1>
                     </v-col>
@@ -20,7 +20,7 @@
                 <v-row class="d-flex flex-column">
                     <!-- SI PAS DE POSTS -->
                     <v-col v-if="post == 0">
-                        <p class="text-center mx-auto my-15 text-h4">Aucun post trouvé !</p>
+                        <p class="text-center mx-auto my-15 text-h5 text-sm-h4">Aucun post trouvé !</p>
                     </v-col>
                     <!-- SI POST -->
                     <v-col cols="12" class="mt-3" v-if="post !== 0" :key="post.id">
@@ -70,7 +70,11 @@
                                             {{ post.dislikesNumber }}
                                         </div>
                                         <v-divider vertical class="red lighten-4 ml-4"></v-divider>
-                                        <div class="px-2 text-body-1">Commentaires ({{ post.commentsNumber }})</div>
+                                        <div class="px-2 text-body-1">
+                                            <v-icon class="d-inline d-sm-none">mdi-comment</v-icon>
+                                            <span class="d-none d-sm-inline">Commentaires </span>
+                                            ({{post.commentsNumber}})
+                                        </div>
                                     </div>
                                     <!-- DIALOGUE DE MODIFICATION DE POST -->
                                     <v-dialog v-model="dialogUpdatePost" persistent max-width="600px">

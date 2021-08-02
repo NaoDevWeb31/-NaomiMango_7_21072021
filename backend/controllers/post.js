@@ -238,7 +238,6 @@ exports.modifyPost = (req, res, next) => {
                     console.log("Échec de modification du post : " + error)
                     return res.status(400).json({ error: "Échec de modification du post !" });
                 } else {
-                    console.log(post);
                     console.log("Post " + postId + " de l'utilisateur " + userId + " modifié !")
                     return res.status(200).json({ message: "Le post a été modifié avec succès !" })
                 }

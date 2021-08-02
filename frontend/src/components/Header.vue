@@ -1,11 +1,7 @@
 <template>
     <div class="header">
         <!-- BARRE DE NAVIGATION -->
-        <v-app-bar
-        app
-        color="red"
-        dark
-        >
+        <v-app-bar app color="red" dark>
         <!-- LOGO -->
             <router-link to="/">
                 <div class="d-flex align-center">
@@ -20,6 +16,24 @@
                 </div>
             </router-link>
             <v-spacer></v-spacer>
+            <!-- BOUTON PAGE PRÉCEDÉNTE -->
+            <router-link to="/" v-if="rightLocation() == true">
+                <div class="mr-6">
+                    <v-btn>
+                        <v-icon>mdi-arrow-left</v-icon>
+                        <span class="d-none d-sm-inline ml-1">Page précédente</span>
+                    </v-btn>
+                </div>
+            </router-link>
+            <!-- BOUTON PAGE ACCOUNT -->
+            <router-link to="/account" v-if="accedAccount">
+                <div>
+                    <v-btn>
+                        <v-icon>mdi-account</v-icon>
+                        <span class="d-none d-sm-inline ml-2">Mon Compte</span>
+                    </v-btn>
+                </div>
+            </router-link>
         </v-app-bar>
     </div>
 </template>
@@ -27,5 +41,42 @@
 <script>
 export default {
     name: "Header",
+    data() {
+        return {
+            // Par défaut, accès non autorisé à cette page
+            accedAccount: false,
+        }
+    },
+    beforeMount() {
+        // Vérifier que l'utilisateur est bien connecté avant d'avoir accès à cette page
+        this.connectedUser()
+    },
+    methods: {
+        connectedUser(){
+            // Si l'user n'est pas stocké dans le localStorage
+            if (localStorage.user === undefined){
+                this.accedAccount = false;
+                console.log("Accès non autorisé !")
+            } else { // Si l'user est bien stocké dans le localStorage
+                this.accedAccount = true;
+                console.log("Accès autorisé à l'utilisateur !");
+            }
+        },
+        rightLocation(){
+            var isRightLocation = false;
+            const currentLocationURL = location.href;
+            //Pages qui n'ont pas besoin du bouton "Page précédente"
+            const signupPageUrl = "http://localhost:8080/signup";
+            const loginPageUrl = "http://localhost:8080/login"
+            
+            if (currentLocationURL == signupPageUrl){
+                isRightLocation = true;
+            }
+            if (currentLocationURL == loginPageUrl){
+                isRightLocation = true;
+            }
+            return isRightLocation
+        }
+    },
 }
 </script>

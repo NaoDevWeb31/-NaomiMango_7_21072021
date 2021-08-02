@@ -6,8 +6,8 @@
         <!-- Si l'utilisateur est bien connecté -->
         <HeaderLogged v-if="accedAccount"/>
         <v-row v-if="accedAccount">
-            <v-col>
-                <h1 class="text-h2 text-center">Mon Profil</h1>
+            <v-col class="my-2">
+                <h1 class="text-h3 text-sm-h2 text-center">Mon Profil</h1>
             </v-col>
         </v-row>
         <v-row v-if="accedAccount" class="d-flex flex-column flex-sm-row justify-center">

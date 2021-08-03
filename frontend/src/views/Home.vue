@@ -17,21 +17,17 @@
       <v-row class="text-center d-flex flex-column align-center flex-sm-row">
         <!-- BOUTON INSCRIPTION -->
         <v-col cols="12" sm="6">
-          <router-link to="/signup">
-            <v-btn x-large color="red">
-              <span class="mr-2">Inscrivez-vous</span>
-              <v-icon>mdi-account-plus</v-icon>
-            </v-btn>
-          </router-link>
+          <v-btn x-large color="red" @click="goSignUp()">
+            <span class="mr-2">Inscrivez-vous</span>
+            <v-icon>mdi-account-plus</v-icon>
+          </v-btn>
         </v-col>
         <!-- BOUTON CONNEXION -->
         <v-col cols="12" sm="6">
-          <router-link to="/login">
-            <v-btn x-large color="red">
-              <span class="mr-2">Connectez-vous</span>
-              <v-icon>mdi-login-variant</v-icon>
-            </v-btn>
-          </router-link>
+          <v-btn x-large color="red" @click="goLogin()">
+            <span class="mr-2">Connectez-vous</span>
+            <v-icon>mdi-login-variant</v-icon>
+          </v-btn>
         </v-col>
       </v-row>
     </v-container>
@@ -45,6 +41,14 @@ import Header from '../components/Header.vue'
     name: 'Home',
     components: {
       Header
+    },
+    methods: {
+      goSignUp(){
+        this.$router.push('/signup')
+      },
+      goLogin(){
+        this.$router.push('/login')
+      }
     },
   }
 </script>

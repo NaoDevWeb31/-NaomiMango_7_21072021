@@ -12,36 +12,36 @@
         </v-row>
         <v-row v-if="accedAccount" class="d-flex flex-column flex-sm-row justify-center">
             <v-card raised class="pa-4 mx-auto" width="40rem" >
-                <v-card-title red>
+                <v-card-title>
                     Informations personnelles de l'utilisateur :
                 </v-card-title>
                 <v-divider></v-divider>
                 <v-card-text>
                     <!-- NOM -->
-                    <v-row class="d-flex 3ustify-space-between">
-                        <v-col col="3">
-                            <p class="black--text data grey lighten-3">Nom</p>
+                    <v-row class="d-flex flex-column align-center flex-sm-row justify-space-between">
+                        <v-col cols="6" sm="3">
+                            <p class="black--text text-center text-sm-left data grey lighten-3">Nom</p>
                         </v-col>
-                        <v-col col="9">
-                            <p class="black--text data grey lighten-3 text-center">{{ userProfile.lastName }}</p>
+                        <v-col cols="12" sm="9">
+                            <p class="black--text data grey lighten-1 text-center">{{ userProfile.lastName }}</p>
                         </v-col>
                     </v-row>
                     <!-- PRÉNOM -->
-                    <v-row class="d-flex justify-space-between">
-                        <v-col col="3">
-                            <p class="black--text data grey lighten-3">Prénom</p>
+                    <v-row class="d-flex flex-column align-center flex-sm-row justify-space-between">
+                        <v-col cols="6" sm="3">
+                            <p class="black--text text-center text-sm-left data grey lighten-3">Prénom</p>
                         </v-col>
-                        <v-col col="9">
-                            <p class="black--text data grey lighten-3 text-center">{{ userProfile.firstName }}</p>
+                        <v-col cols="12" sm="9">
+                            <p class="black--text data grey lighten-1 text-center">{{ userProfile.firstName }}</p>
                         </v-col>
                     </v-row>
                     <!-- EMAIL -->
-                    <v-row class="d-flex justify-space-between">
-                        <v-col col="3">
-                            <p class="black--text data grey lighten-3">E-mail</p>
+                    <v-row class="d-flex flex-column align-center flex-sm-row justify-space-between">
+                        <v-col cols="6" sm="3">
+                            <p class="black--text text-center text-sm-left data grey lighten-3">E-mail</p>
                         </v-col>
-                        <v-col col="9">
-                            <p class="black--text data grey lighten-3 text-center">{{ userProfile.email }}</p>
+                        <v-col cols="12" sm="9">
+                            <p class="black--text data grey lighten-1 text-center">{{ userProfile.email }}</p>
                         </v-col>
                     </v-row>
                 </v-card-text>

@@ -25,7 +25,7 @@
                     <!-- POSTS -->
                     <v-col cols="12" class="mt-3" v-for="post in posts" :key="post.id">
                         <v-card width="600" class="mx-auto rounded-lg">
-                            <v-list-item five-line class="px-0 py-0">
+                            <v-list-item class="px-0 py-0">
                                 <v-list-item-content class="px-0 py-0">
                                     <!-- LIGNE 1 -->
                                     <div class="px-5 py-1">
@@ -49,7 +49,7 @@
                                         <div class="px-5 py-2 text-h5">{{ post.title }}</div>
                                         <div class="px-5 py-2">{{ post.description }}</div>
                                         <div class="px-5 pt-3 pb-5 d-flex justify-center">
-                                            <v-img :src="post.image_url" cover width="200"/>
+                                            <v-img :src="post.image_url" contain width="200"/>
                                         </div>
                                     </router-link>
                                     <v-divider class="mb-0 red lighten-4"></v-divider>

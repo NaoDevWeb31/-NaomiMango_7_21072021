@@ -17,14 +17,12 @@
             </router-link>
             <v-spacer></v-spacer>
             <!-- BOUTON PAGE PRÉCEDÉNTE -->
-            <router-link to="." v-if="rightLocation() == true">
-                <div class="mx-6">
-                    <v-btn>
-                        <v-icon>mdi-arrow-left</v-icon>
-                        <span class="d-none d-sm-inline ml-1">Page précédente</span>
-                    </v-btn>
-                </div>
-            </router-link>
+            <div class="mx-6" v-if="rightLocation() == true">
+                <v-btn @click="goPreviousPage()">
+                    <v-icon>mdi-arrow-left</v-icon>
+                    <span class="d-none d-sm-inline ml-1">Page précédente</span>
+                </v-btn>
+            </div>
             <!-- BOUTON INSCRIPTION -->
             <div class="d-flex align-center">
                 <v-btn v-on:click="deconnect()" color="dark">
@@ -58,6 +56,9 @@ export default {
                 isRightLocation = false;
             }
             return isRightLocation
+        },
+        goPreviousPage(){
+            this.$router.push('.')
         }
     },
 }

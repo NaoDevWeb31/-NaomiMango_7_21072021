@@ -26,7 +26,7 @@
                     <v-col cols="12" class="mt-3" v-if="post !== 0" :key="post.id">
                         <!-- POST -->
                         <v-card width="600" class="mx-auto rounded-lg">
-                            <v-list-item five-line class="px-0 py-0">
+                            <v-list-item class="px-0 py-0">
                                 <v-list-item-content class="px-0 py-0">
                                     <!-- LIGNE 1 -->
                                     <div v-if="sessionUserId === post.user_id || sessionUserRole === 2">
@@ -51,7 +51,7 @@
                                     <div class="px-5 py-2 text-h5">{{ post.title }}</div>
                                     <div class="px-5 py-2">{{ post.description }}</div>
                                     <div class="px-5 pt-3 pb-5 d-flex justify-center">
-                                        <v-img :src="post.image_url" cover width="200"/>
+                                        <v-img :src="post.image_url" contain width="200"/>
                                     </div>
                                     <v-divider class="mb-0 red lighten-4"></v-divider>
                                     <!-- LIGNE 4 -->
@@ -112,7 +112,7 @@
                             </div>
                             <!-- COMMENTAIRE -->
                             <v-card width="550" class="mx-auto rounded-lg mb-3" v-for="comment in comments" :key="comment.id">
-                                <v-list-item five-line class="px-0 py-0">
+                                <v-list-item class="px-0 py-0">
                                     <v-list-item-content class="px-0 py-0">
                                         <!-- LIGNE 1 -->
                                         <div v-if="sessionUserId === comment.user_id || sessionUserRole === 2">
@@ -162,7 +162,7 @@
                                 </v-list-item>
                             </v-card>
                             <!-- COMMENTER -->
-                            <v-card width="550" hei class="mx-auto rounded-lg mb-3 d-flex justify-space-between">
+                            <v-card width="550" class="mx-auto rounded-lg mb-3 d-flex justify-space-between">
                                 <v-card-text class="pb-1">
                                         <v-form ref="form" v-model="valid" >
                                             <v-textarea rows="1" v-model="comment" ref="comment" :rules="commentRules" counter="320" label="Écrire un commentaire" type="text" color="black" outlined clearable clear-icon="mdi-eraser" auto-grow></v-textarea>

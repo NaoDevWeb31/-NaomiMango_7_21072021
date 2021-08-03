@@ -17,23 +17,19 @@
             </router-link>
             <v-spacer></v-spacer>
             <!-- BOUTON PAGE PRÉCEDÉNTE -->
-            <router-link to="/" v-if="rightLocation() == true">
-                <div class="mr-6">
-                    <v-btn>
-                        <v-icon>mdi-arrow-left</v-icon>
-                        <span class="d-none d-sm-inline ml-1">Page précédente</span>
-                    </v-btn>
-                </div>
-            </router-link>
+            <div class="mr-6" v-if="rightLocation() == true">
+                <v-btn @click="getPreviousPage()">
+                    <v-icon>mdi-arrow-left</v-icon>
+                    <span class="d-none d-sm-inline ml-1">Page précédente</span>
+                </v-btn>
+            </div>
             <!-- BOUTON PAGE ACCOUNT -->
-            <router-link to="/account" v-if="accedAccount">
-                <div>
-                    <v-btn>
-                        <v-icon>mdi-account</v-icon>
-                        <span class="d-none d-sm-inline ml-2">Mon Compte</span>
-                    </v-btn>
-                </div>
-            </router-link>
+            <div v-if="accedAccount">
+                <v-btn @click="getAccountPage()">
+                    <v-icon>mdi-account</v-icon>
+                    <span class="d-none d-sm-inline ml-2">Mon Compte</span>
+                </v-btn>
+            </div>
         </v-app-bar>
     </div>
 </template>
@@ -76,7 +72,13 @@ export default {
                 isRightLocation = true;
             }
             return isRightLocation
-        }
+        },
+        getPreviousPage(){
+            this.$router.push('/')
+        },
+        getAccountPage(){
+            this.$router.push('/account')
+        },
     },
 }
 </script>

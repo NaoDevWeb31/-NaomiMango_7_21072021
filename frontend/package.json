@@ -1,12 +1,14 @@
 {
   "name": "frontend",
   "version": "0.1.0",
+  "description": "Frontend du Projet 7 d'OpenClassrooms \"Développeur web\" - Groupomania",
   "private": true,
   "scripts": {
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
     "lint": "vue-cli-service lint"
   },
+  "author": "Naomi Mango",
   "dependencies": {
     "axios": "^0.21.1",
     "core-js": "^3.6.5",

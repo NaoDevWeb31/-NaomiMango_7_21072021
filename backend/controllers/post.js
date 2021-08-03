@@ -1,6 +1,6 @@
 // Import des packages dans le contrôleur
-const mysql = require("mysql"); // Interagir avec une base de données MySQL en Node
-const jwt = require("jsonwebtoken"); // Créer des tokens et les vérifie
+const mysql = require("mysql"); // Interagit avec une base de données MySQL en Node
+const jwt = require("jsonwebtoken"); // Vérifie des tokens
 const fs = require("fs"); // Accède aux fonctions qui permettent de modifier le système de fichiers
 
 // Import de la configuration de la base de données dans le contrôleur
@@ -50,12 +50,11 @@ exports.getAllPosts = (req, res, next) => {
                             posts.creation_date ,
                             posts.title, 
                             posts.description, 
-                            posts.image_url,
+                            posts.image_url, 
                             (SELECT COUNT(if(post_id = posts.id, 1, NULL)) 
                                 FROM comments 
                                 WHERE post_id = posts.id
-                            ) 
-                            AS commentsNumber, 
+                            ) AS commentsNumber, 
                             (SELECT COUNT(if(opinion = 2, 1, NULL)) 
                                 FROM likes 
                                 WHERE post_id = posts.id
@@ -107,12 +106,11 @@ exports.getOneUserPosts = (req, res, next) => {
                         posts.creation_date , 
                         posts.title, 
                         posts.description, 
-                        posts.image_url ,
+                        posts.image_url, 
                         (SELECT COUNT(if(post_id = posts.id, 1, NULL)) 
                             FROM comments 
                             WHERE post_id = posts.id
-                        ) 
-                        AS commentsNumber, 
+                        ) AS commentsNumber, 
                         (SELECT COUNT(if(opinion = 2, 1, NULL)) 
                             FROM likes 
                             WHERE post_id = posts.id
@@ -148,7 +146,7 @@ exports.getOnePost = (req, res, next) => {
     const decodedToken = jwt.verify(token, "RANDOM_TOKEN_SECRET");
     const userId = decodedToken.userId;
 
-    // Préparer la requête SQL pour récupérer un post
+    // Préparer la requête SQL pour récupérer un post spécifique
     let sql = `SELECT   posts.user_id, 
                         users.last_name, 
                         users.first_name, 
@@ -208,7 +206,7 @@ exports.modifyPost = (req, res, next) => {
     let imageSql = "SELECT image_url FROM posts WHERE id = ?;";
     // Préparer la requête SQL pour modifier le post
     let postSql = `UPDATE posts SET title = ?, description = ?, image_url = ? WHERE id = ?;`;
-    // Insérer les valeurs du corps de les requêtes PUT dans la requête SQL
+    // Insérer les valeurs du corps des requêtes PUT dans les requêtes SQL
     let imageInserts = [postId];
     let postInserts = [title, description, imageUrl, postId];
     // Assembler les requêtes d'insertion SQL finales
@@ -221,18 +219,18 @@ exports.modifyPost = (req, res, next) => {
             console.log("Tentative de suppression de l'image du post échouée : " + error)
             return res.status(400).json({ error: "Tentative de suppression de l'image du post échouée !" })
         } else {
-            let formerImageURL = image[0].image_url;// URL de l'ancienne image récupérée s'il y en a une
-            if (formerImageURL !== ""){ // Supprimer l'ancienne image du post
+            let formerImageURL = image[0].image_url; // URL de l'ancienne image récupérée s'il y en a une
+            // Supprimer l'ancienne image du post
+            if (formerImageURL !== ""){
                 // Utiliser le segment "/images/" de notre URL d'image pour extraire le nom du fichier à supprimer
                 const filename = formerImageURL.split("/images/")[1];
                 // Passer comme paramètres le fichier à supprimer et le callback à exécuter une fois ce fichier supprimé
-                fs.unlink(`images/${filename}`, () => {
-                });
+                fs.unlink(`images/${filename}`, () => {});
                 console.log("Image supprimé !");
             } else {
                 console.log("Pas d'image à supprimer !");
             }
-            //Qu'il y ait une image ou pas
+            //Qu'il y ait une image ou pas, effectuer la requête auprès de la base de données
             db.query(postSql, function (error, post) {
                 if (error){
                     console.log("Échec de modification du post : " + error)
@@ -258,7 +256,7 @@ exports.deletePost = (req, res, next) => {
         let imageSql = "SELECT image_url FROM posts WHERE id = ?;";
         // Préparer la requête SQL pour supprimer le post
         let postSql = "DELETE FROM posts WHERE id = ?;";
-        // Insérer les valeurs du corps de les requêtes DELETE dans la requête SQL
+        // Insérer les valeurs du corps des requêtes DELETE dans les requête SQL
         let imageInserts = [postId];
         let postInserts = [postId];
         // Assembler les requêtes d'insertion SQL finales
@@ -271,16 +269,17 @@ exports.deletePost = (req, res, next) => {
                 return res.status(400).json({ error: "Tentative de suppression de l'image du post par le modérateur échouée !" })
             } else {
                 let imageUrl = image[0].image_url;
+                // Supprimer l'ancienne image du post
                 if (imageUrl !== ""){
                     // Utiliser le segment "/images/" de notre URL d'image pour extraire le nom du fichier à supprimer
                     const filename = imageUrl.split("/images/")[1];
                     // Passer comme paramètres le fichier à supprimer et le callback à exécuter une fois ce fichier supprimé
-                    fs.unlink(`images/${filename}`, () => {
-                    });
+                    fs.unlink(`images/${filename}`, () => {});
                     console.log("Image supprimé par le modérateur !");
                 } else {
                     console.log("Pas d'image à supprimer !");
                 }
+                //Qu'il y ait une image ou pas, effectuer la requête auprès de la base de données
                 db.query(postSql, function (error, post) {
                     if (error) {
                         console.log("Tentative de suppression du post par le modérateur échouée : " + error)
@@ -297,7 +296,7 @@ exports.deletePost = (req, res, next) => {
         let imageSql = "SELECT image_url FROM posts WHERE id = ?;";
         // Préparer la requête SQL pour supprimer le post
         let postSql = "DELETE FROM posts WHERE id = ? AND user_id = ?;";
-        // Insérer les valeurs du corps de les requêtes DELETE dans la requête SQL
+        // Insérer les valeurs du corps des requêtes DELETE dans les requêtes SQL
         let imageInserts = [postId];
         let postInserts = [postId, userId];
         // Assembler les requêtes d'insertion SQL finales
@@ -310,16 +309,17 @@ exports.deletePost = (req, res, next) => {
                 return res.status(400).json({ error: "Tentative de suppression de l'image du post par l'utilisateur échouée !" })
             } else {
                 let imageUrl = image[0].image_url;
+                // Supprimer l'ancienne image du post
                 if (imageUrl !== ""){
                     // Utiliser le segment "/images/" de notre URL d'image pour extraire le nom du fichier à supprimer
                     const filename = imageUrl.split("/images/")[1];
                     // Passer comme paramètres le fichier à supprimer et le callback à exécuter une fois ce fichier supprimé
-                    fs.unlink(`images/${filename}`, () => {
-                    });
+                    fs.unlink(`images/${filename}`, () => {});
                     console.log("Image supprimé par l'utilisateur !");
                 } else {
                     console.log("Pas d'image à supprimer !");
                 }
+                //Qu'il y ait une image ou pas, effectuer la requête auprès de la base de données
                 db.query(postSql, function (error, post) {
                     if (error) {
                         console.log("Tentative de suppression du post par l'utilisateur échouée : " + error)
@@ -340,7 +340,7 @@ exports.getOnePostComments = (req, res, next) => {
     const userId = decodedToken.userId;
     const postId = req.params.id;
 
-    // Préparer la requête SQL pour récupérer un post
+    // Préparer la requête SQL pour récupérer les commentaire d'un post spécifique
     let sql = `SELECT   comments.id, 
                         users.last_name,
                         users.first_name, 
@@ -374,7 +374,7 @@ exports.createComment = (req, res, next) => {
     const userId = decodedToken.userId;
     const postId = req.body.postId;
     const content = req.body.content;
-    // Préparer la requête SQL pour créer un post
+    // Préparer la requête SQL pour créer un commentaire
     let sql = "INSERT INTO comments (user_id, post_id, content) VALUES (?, ?, ?);";
     // Insérer les valeurs du corps de la requête POST dans la requête SQL
     let inserts = [userId, postId, content];
@@ -400,20 +400,18 @@ exports.modifyComment = (req, res, next) => {
     //Récupérer les données envoyées
     const commentId = req.params.id;
     const content = req.body.content;
-    // Préparer la requête SQL pour modifier le commentaire
+    // Préparer la requête SQL pour modifier un commentaire
     let sql = `UPDATE comments SET content = ? WHERE id = ?;`;
     // Insérer les valeurs du corps de la requête PUT dans la requête SQL
     let inserts = [content, commentId];
     // Assembler la requête d'insertion SQL finale
     sql = mysql.format(sql, inserts);
-    
     // Effectuer la requête auprès de la base de données
     db.query(sql, function (error, comment) {
         if (error){
             console.log("Échec de modification du commentaire : " + error)
             return res.status(400).json({ error: "Échec de modification du commentaire !" });
         } else {
-            console.log(comment);
             console.log("Commentaire " + commentId + " de l'utilisateur " + userId + " modifié !")
             return res.status(200).json({ message: "Le commentaire a été modifié avec succès !" })
         }
@@ -428,14 +426,13 @@ exports.deleteComment = (req, res, next) => {
     const commentId = req.params.id;
 
     if (adminRole === 2){ //Le modérateur
-        // Préparer la requête SQL pour supprimer le post
+        // Préparer la requête SQL pour supprimer le commentaire
         let sql = "DELETE FROM comments WHERE id = ?;";
         // Insérer les valeurs du corps de la requête DELETE dans la requête SQL
         let inserts = [commentId];
         // Assembler la requête d'insertion SQL finale
         sql = mysql.format(sql, inserts);
         // Effectuer la requête auprès de la base de données
-        
         db.query(sql, function (error, comment) {
             if (error) {
                 console.log("Tentative de suppression du commentaire par le modérateur échouée : " + error)
@@ -446,14 +443,13 @@ exports.deleteComment = (req, res, next) => {
             }
         });
     } else { //L'utilisateur
-        // Préparer la requête SQL pour supprimer le post
+        // Préparer la requête SQL pour supprimer le commentaire
         let sql = "DELETE FROM comments WHERE id = ? AND user_id = ?;";
         // Insérer les valeurs du corps de la requête DELETE dans la requête SQL
         let inserts = [commentId, userId];
         // Assembler la requête d'insertion SQL finale
         sql = mysql.format(sql, inserts);
         // Effectuer la requête auprès de la base de données
-        
         db.query(sql, function (error, comment) {
             if (error) {
                 console.log("Tentative de suppression du commentaire par l'utilisateur échouée : " + error)

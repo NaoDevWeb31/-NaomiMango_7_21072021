@@ -1,7 +1,7 @@
 // Import des packages dans le contrôleur
-const mysql = require("mysql"); // Interagir avec une base de données MySQL en Node
+const mysql = require("mysql"); // Interagit avec une base de données MySQL en Node
 const bcrypt = require("bcrypt"); // Chiffre et crée un hash des mdp
-const jwt = require("jsonwebtoken"); // Créer des tokens et les vérifie
+const jwt = require("jsonwebtoken"); // Crée des tokens et les vérifie
 
 // Import de la configuration de la base de données dans le contrôleur
 const db = require("../database/db-config");
@@ -19,26 +19,26 @@ exports.signup = (req, res, next) => {
         // Recevoir le hash généré
         .then(hash => {
             // Préparer la requête SQL pour créer un utilisateur
-            let sql = "INSERT INTO users (last_name, first_name, email, password) VALUES (?, ?, ?, ?)";
+            let signSql = "INSERT INTO users (last_name, first_name, email, password) VALUES (?, ?, ?, ?)";
             // Insérer les valeurs du corps de la requête POST dans la requête SQL
-            let inserts = [lastName, firstName, email, hash];
+            let signInserts = [lastName, firstName, email, hash];
             // Assembler la requête d'insertion SQL finale
-            sql = mysql.format(sql, inserts);
+            signSql = mysql.format(signSql, signInserts);
             // Effectuer la requête auprès de la base de données
-            db.query(sql, function (error, result) {
+            db.query(signSql, function (error, result) {
                 if (error) {
                     console.log("Inscription échouée :" + error)
                     return res.status(400).json({ error })
                 } else {
                     console.log("Utilisateur créé !")
-                    // Préparer la requête SQL pour récupérer un utilisateur
-                    let sql = "SELECT id, first_name, admin_role FROM users WHERE email = ?";
+                    // Préparer la requête SQL pour récupérer l'utilisateur
+                    let logSql = "SELECT id, first_name, admin_role FROM users WHERE email = ?";
                     // Insérer les valeurs du corps de la requête POST dans la requête SQL
-                    let inserts = [email];
+                    let logInserts = [email];
                     // Assembler la requête d'insertion SQL finale
-                    sql = mysql.format(sql, inserts);
+                    logSql = mysql.format(logSql, logInserts);
                     // Effectuer la requête auprès de la base de données
-                    db.query(sql, function (error, result) {
+                    db.query(logSql, function (error, result) {
                         // Si l'utilisateur ne correspond pas à un utilisateur existant de la base de données
                         if (result === "" || result == undefined) {
                             console.log(error)
@@ -51,7 +51,7 @@ exports.signup = (req, res, next) => {
                                 // Encoder un nouveau token
                                 token: jwt.sign(
                                     // Contenant l'identifiant et le rôle administrateur  en tant que payload (les données encodées dans le token)
-                                    { userId: result[0].id,firstName: result[0].first_name, adminRole: result[0].admin_role },
+                                    { userId: result[0].id, firstName: result[0].first_name, adminRole: result[0].admin_role },
                                     // En utilisant une chaîne secrète de développement temporaire (à remplacer par une chaîne aléatoire beaucoup plus longue)
                                     "RANDOM_TOKEN_SECRET",
                                     // En définissant la durée de validité du token (se reconnecter au bout de 24 heures)
@@ -92,7 +92,7 @@ exports.login = (req, res, next) => {
             .then(valid => {
                 // Si le mdp saisi ne correspond pas
                 if (!valid) {
-                    console.log("Tentative de connexion de l'utilisateur " + req.body.email + " mais mot de passe incorrect !");
+                    console.log("Tentative de connexion d'un utilisateur mais mot de passe incorrect !");
                     return res.status(401).json({ error: "Mot de passe incorrect !" });
                 }
                 // Si le mdp saisi correspond, renvoyer l'identifiant userID et un token (jeton Web JSON) au front-end
@@ -110,7 +110,7 @@ exports.login = (req, res, next) => {
                         { expiresIn: "6h" }
                     )
                 });
-                console.log("L'utilisateur " + req.body.email+ " ayant l'userId " + result[0].id + " est désormais connecté !");
+                console.log("L'utilisateur ayant l'userId " + result[0].id + " est désormais connecté !");
             })
             .catch(error => res.status(500).json({ error }));
     });
@@ -121,6 +121,7 @@ exports.getUserProfile = (req, res, next) => {
     const decodedToken = jwt.verify(token, "RANDOM_TOKEN_SECRET");
     const userId = decodedToken.userId;
 
+    if (Number(req.params.id) === userId) {
         // Préparer la requête SQL pour récupérer un utilisateur
         let sql = "SELECT last_name, first_name, email FROM users WHERE id = ?";
         // Insérer les valeurs du corps de la requête GET dans la requête SQL
@@ -141,7 +142,9 @@ exports.getUserProfile = (req, res, next) => {
                 })
             }
         });
-    
+    } else {
+        return res.status(400).json({ error: "Tentative de récupération des infos de l'utilisateur non autorisée !" })
+    }
 }
 
 exports.deleteOneUser = (req, res, next) => {
@@ -169,5 +172,4 @@ exports.deleteOneUser = (req, res, next) => {
     } else {
         return res.status(400).json({ error: "Tentative de suppression de l'utilisateur non autorisée !" })
     }
-    
 }

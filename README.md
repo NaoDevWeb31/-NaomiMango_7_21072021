@@ -2,7 +2,7 @@
 
 ### Projet 7 du parcours "Développeur web" d'OpenClassrooms - Créez un réseau social d’entreprise
 
-![Logo](https://raw.githubusercontent.com/NaoDevWeb31/NaomiMango_7_21072021/main/frontend/src/assets/small-banner.png)
+<div align="center" style="margin-top: 30px"><img src="https://raw.githubusercontent.com/NaoDevWeb31/NaomiMango_7_21072021/main/frontend/src/assets/small-banner.png"/></div>
 
 ## Objectif
 
@@ -19,32 +19,32 @@ Construire un réseau social interne pour les employés de Groupomania. Choisir 
 
 #### Projet Groupomania
 
-Cloner ou télécharger le repository, puis :
+Cloner ou télécharger le repository, puis suivre les instructions suivantes :
 
-- Base de données MySQL
+##### <ins>Base de données MySQL</ins>
 
-  - Ouvrir le terminal à partir du dossier du projet
-  - Se connecter à MySQL en exécutant `mysql -h localhost -u root -p`
-  - Taper le mot de passe
-  - Créer la base de données du projet en exécutant `CREATE DATABASE groupomania_db DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;`
-  - Utiliser cette base de données en exécutant `USE groupomania_db;`
-  - Importer le fichier groupomania_db.sql en exécutant `SOURCE groupomania_db.sql;`
-  - Créer un fichier `.env` dans lequel il faut ajouter les 4 variables `DB_` en suivant l'exemple du fichier `.env.example`
-  - Renseigner l'hôte, l'utilisateur, le mot de passe et le nom de base de données
+- Ouvrir le terminal à partir du dossier du projet
+- Se connecter à MySQL en exécutant `mysql -h localhost -u root -p`
+- Taper le mot de passe
+- Créer la base de données du projet en exécutant `CREATE DATABASE groupomania_db DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;`
+- Utiliser cette base de données en exécutant `USE groupomania_db;`
+- Importer le fichier groupomania_db.sql en exécutant `SOURCE groupomania_db.sql;`
+- Créer un fichier `.env` dans lequel il faut ajouter les 4 variables `DB_` en suivant l'exemple du fichier `.env.example`
+- Renseigner l'hôte, l'utilisateur, le mot de passe et le nom de base de données
 
-- Lancement du Backend
+##### <ins>Lancement du Backend</ins>
 
-  - Ouvrir un autre terminal et se déplacer dans le dossier "backend"
-  - Exécuter `npm install`
-  - Créer un fichier `.env` dans lequel il faut ajouter `SESSION_SECRET` en suivant l'exemple comme dans le fichier `.env.example`
-  - Lui donner une valeur
-  - Exécuter `npm start`
+- Ouvrir un autre terminal et se déplacer dans le dossier "backend"
+- Exécuter `npm install`
+- Créer un fichier `.env` dans lequel il faut ajouter `SESSION_SECRET` en suivant l'exemple comme dans le fichier `.env.example`
+- Lui donner une valeur
+- Exécuter `npm start`
 
-- Lancement du Frontend
+##### <ins>Lancement du Frontend</ins>
 
-  - Ouvrir un autre terminal et se déplacer dans le dossier "frontend"
-  - Exécuter `npm install`
-  - Exécuter `npm serve`
+- Ouvrir un autre terminal et se déplacer dans le dossier "frontend"
+- Exécuter `npm install`
+- Exécuter `npm serve`
 
 #### Application Groupomania
 
@@ -60,7 +60,6 @@ Se rendre sur http://localhost:8080 via le navigateur
 #### Les 2 fonctionnalités proposées
 
 - 9GAG : pour partager et commenter des gifs avec d’autres collègues
-
 - Reddit : pour écrire et/ou partager des articles avec les collègues sur des sujets qui les intéressent
 
 ## Contraintes techniques
@@ -103,4 +102,4 @@ Se rendre sur http://localhost:8080 via le navigateur
 
 Pour plus de détails sur les instructions de ce projet :
 
-- [Spécifications]()
+- [Spécifications](https://github.com/NaoDevWeb31/NaomiMango_7_21072021/blob/main/rules/Groupomania_Specs_FR_DWJ_VF.pdf)

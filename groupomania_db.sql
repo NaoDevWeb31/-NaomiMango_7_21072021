@@ -1,4 +1,5 @@
 -- CRÉATION DE LA TABLE DES UTILISATEURS --
+DROP TABLE IF EXISTS `users`;
 CREATE TABLE `users` (
   -- ID de l'utilisateur
   `id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
@@ -16,8 +17,10 @@ CREATE TABLE `users` (
   `admin_role` INT DEFAULT 1,
   -- Clé primaire => ID de l'utilisateur
   PRIMARY KEY (`id`)
-) ENGINE = InnoDB AUTO_INCREMENT = 1 DEFAULT CHARSET = utf8;
+) ENGINE = InnoDB AUTO_INCREMENT = 1 DEFAULT CHARSET = utf8mb4;
+------------------------------------------------------
 -- CRÉATION DE LA TABLE DE PUBLICATIONS --
+DROP TABLE IF EXISTS `posts`;
 CREATE TABLE `posts` (
   -- ID du post
   `id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
@@ -37,8 +40,10 @@ CREATE TABLE `posts` (
   INDEX `ind_user_id` (`user_id`),
   -- Clé étrangère => User ID du créateur du post (RÉFÉRENCE: la colonne "id" de la table "users")
   CONSTRAINT `fk_posts_user_id` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE = InnoDB AUTO_INCREMENT = 1 DEFAULT CHARSET = utf8;
+) ENGINE = InnoDB AUTO_INCREMENT = 1 DEFAULT CHARSET = utf8mb4;
+------------------------------------------------------
 -- CRÉATION DE LA TABLE DE COMMENTAIRES --
+DROP TABLE IF EXISTS `comments`;
 CREATE TABLE `comments` (
   -- ID du commentaire
   `id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
@@ -60,8 +65,10 @@ CREATE TABLE `comments` (
   CONSTRAINT `fk_comments_user_id` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   -- Clé étrangère => ID du post commenté (RÉFÉRENCE: la colonne "id" de la table "posts")
   CONSTRAINT `fk_comments_post_id` FOREIGN KEY (`post_id`) REFERENCES `posts` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE = InnoDB AUTO_INCREMENT = 1 DEFAULT CHARSET = utf8;
--- CRÉATION DE LA TABLE DES LIKES --
+) ENGINE = InnoDB AUTO_INCREMENT = 1 DEFAULT CHARSET = utf8mb4;
+------------------------------------------------------
+-- CRÉATION DE LA TABLE DES LIKES/DISLIKES --
+DROP TABLE IF EXISTS `likes`;
 CREATE TABLE `likes` (
   -- ID de l'opinion
   `id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
@@ -81,4 +88,4 @@ CREATE TABLE `likes` (
   CONSTRAINT `fk_likes_user_id` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   -- Clé étrangère => ID du post liké/disliké (RÉFÉRENCE: la colonne "id" de la table "posts")
   CONSTRAINT `fk_likes_post_id` FOREIGN KEY (`post_id`) REFERENCES `posts` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE = InnoDB AUTO_INCREMENT = 1 DEFAULT CHARSET = utf8;
+) ENGINE = InnoDB AUTO_INCREMENT = 1 DEFAULT CHARSET = utf8mb4;

@@ -36,15 +36,15 @@ Cloner ou télécharger le repository, puis suivre les instructions suivantes :
 
 - Ouvrir un autre terminal et se déplacer dans le dossier "backend"
 - Exécuter `npm install`
-- Créer un fichier `.env` dans lequel il faut ajouter `SESSION_SECRET` en suivant l'exemple comme dans le fichier `.env.example`
-- Lui donner une valeur
+- Dans le fichier `.env` déjà créé, ajouter `APP_DOMAIN` en suivant l'exemple du fichier `.env.example`, ainsi que `SESSION_SECRET`
+- Donner une valeur à cette dernière variable d'environnement
 - Exécuter `npm start`
 
 ##### <ins>Lancement du Frontend</ins>
 
 - Ouvrir un autre terminal et se déplacer dans le dossier "frontend"
 - Exécuter `npm install`
-- Exécuter `npm serve`
+- Exécuter `npm run serve`
 
 #### Application Groupomania
 

@@ -4,8 +4,8 @@
         
         <!-- Si l'utilisateur est bien connecté -->
         <HeaderLogged v-if="accedAccount"/>
-        <v-container class="fill-height" fluid v-if="accedAccount">
-            <v-row>
+        <v-main class="container fluid fill-height pa-3" fluid v-if="accedAccount">
+            <v-row class="mt-8 my-sm-5">
                 <v-col>
                     <h1 class="text-center text-h5 text-sm-h3">
                         Bienvenue sur votre compte
@@ -18,7 +18,7 @@
                 <v-col cols="12" sm="6">
                     <router-link to="/account/profile">
                         <v-card>
-                            <v-img class="white--text align-end" max-height="350px" :src="require('../assets/Profile.jpg')">
+                            <v-img class="white--text align-end" max-height="350px" :src="require('../assets/Profile.jpg')" alt="Silhouette du profil d'une femme avec le ciel en fond">
                                 <v-card-title class="red py-2 py-sm-4">
                                     <h2 class="headline headline--xs mb-0 text-center h3">Mon Profil</h2>
                                 </v-card-title>
@@ -30,7 +30,7 @@
                 <v-col cols="12" sm="6">
                     <router-link to="/account/forum">
                         <v-card>
-                            <v-img class="white--text align-end" max-height="350px" :src="require('../assets/Forum.jpg')">
+                            <v-img class="white--text align-end" max-height="350px" :src="require('../assets/Forum.jpg')" alt="Chaises bleues vides en cercle dans un salle ">
                                 <v-card-title class="red py-2 py-sm-4">
                                     <h2 class="headline headline--xs mb-0 text-center h3">Forum</h2>
                                 </v-card-title>
@@ -39,7 +39,7 @@
                     </router-link>
                 </v-col>
             </v-row>
-        </v-container>
+        </v-main>
     </v-container>
 </template>
 

@@ -6,7 +6,7 @@
             <router-link to="/">
                 <div class="d-flex align-center">
                     <v-img
-                    alt="Logo de l'entreprise Groupomania"
+                    alt="Logo de l'entreprise Groupomania version blanche"
                     class="shrink mr-2"
                     contain
                     src="../assets/icon-left-font-monochrome-white.png"
@@ -18,14 +18,14 @@
             <v-spacer></v-spacer>
             <!-- BOUTON PAGE PRÉCEDÉNTE -->
             <div class="mr-6" v-if="rightLocation() == true">
-                <v-btn @click="getPreviousPage()">
+                <v-btn @click="getPreviousPage()" aria-label="Naviguer vers la page précédente">
                     <v-icon>mdi-arrow-left</v-icon>
                     <span class="d-none d-sm-inline ml-1">Page précédente</span>
                 </v-btn>
             </div>
             <!-- BOUTON PAGE ACCOUNT -->
             <div v-if="accedAccount">
-                <v-btn @click="getAccountPage()">
+                <v-btn @click="getAccountPage()" aria-label="Aller sur mon compte">
                     <v-icon>mdi-account</v-icon>
                     <span class="d-none d-sm-inline ml-2">Mon Compte</span>
                 </v-btn>

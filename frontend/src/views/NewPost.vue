@@ -1,23 +1,23 @@
 <template>
     <div>
     <!-- Si l'utilisateur n'est pas bien connecté -->
-        <div v-if="!accedAccount">
+        <v-main v-if="!accedAccount">
             <p class="display-1 text-center mx-auto" width="100%">Accès non autorisé !</p>
-        </div>
+        </v-main>
     <!-- Si l'utilisateur est bien connecté -->
         <v-container class="fill-height" fluid v-if="accedAccount">
             <HeaderLogged/>
-            <v-container class="fill-height" fluid>
-            <!-- TITRE -->
-                <v-row class="my-2">
+            <v-main class="container fluid fill-height">
+                <!-- TITRE -->
+                <section class="my-2">
                     <v-col>
                         <h1 class="text-center text-h4 text-sm-h3">
                             Créez un Nouveau Post
                         </h1>
                     </v-col>
-                </v-row>
-            <!-- FORMULAIRE NOUVEAU POST -->
-                <v-row>
+                </section>
+                <!-- FORMULAIRE NOUVEAU POST -->
+                <section class="row mx-3 mx-sm-auto">
                     <v-card outlined elevation="3" class="my-4 mx-auto pt-3" width="30rem">
                         <v-card-text>
                             <v-form ref="form" v-model="valid" >
@@ -27,14 +27,14 @@
                                 <div class="my-1 text-right">Champs requis (*)</div>
                                 <v-divider class="mt-9"></v-divider>
                                 <v-card-actions class="d-flex justify-space-between">
-                                    <v-btn :disabled="!valid" color="success" class="mt-3" @click="createPost()">Créer le post</v-btn>
-                                    <v-btn color="red lighten-1" dark class="mt-3" @click="backToForum()">Annuler</v-btn>
+                                    <v-btn :disabled="!valid" aria-label="Créer le post" color="success" class="mt-3" @click="createPost()">Créer le post</v-btn>
+                                    <v-btn color="red lighten-1" aria-label="Annuler la création du post" dark class="mt-3" @click="backToForum()">Annuler</v-btn>
                                 </v-card-actions>
                             </v-form>
                         </v-card-text>
                     </v-card>
-                </v-row>
-            </v-container>
+                </section>
+            </v-main>
         </v-container>
     </div>
 </template>

@@ -1,40 +1,40 @@
 <template>
     <div>
     <!-- Si l'utilisateur n'est pas bien connecté -->
-        <div v-if="!accedAccount">
+        <v-main v-if="!accedAccount">
             <p class="display-1 text-center mx-auto" width="100%">Accès non autorisé !</p>
-        </div>
+        </v-main>
     <!-- Si l'utilisateur est bien connecté -->
         <v-container class="fill-height" fluid v-if="accedAccount">
             <HeaderLogged/>
-            <v-container class="fill-height" fluid>
+            <v-main class="container fluid fill-height">
                 <!-- TITRE -->
-                <v-row class="my-2">
+                <section class="row my-2">
                     <v-col>
                         <h1 class="text-center text-h4 text-sm-h3">
                             Mes Posts
                         </h1>
                     </v-col>
-                </v-row>
+                </section>
                 <PostsNav/>
-                <v-row class="d-flex flex-column">
+                <section class="row d-flex flex-column">
                     <!-- SI PAS DE POSTS -->
                     <v-col v-if="posts.length === 0">
                         <p class="text-center mx-auto my-15 text-h5 text-sm-h4">Aucun post trouvé !</p>
                     </v-col>
                     <!-- POSTS -->
-                    <v-col cols="12" class="mt-3" v-for="post in posts" :key="post.id">
+                    <article class="col-12 mt-3" v-for="post in posts" :key="post.id">
                         <v-card width="600" class="mx-auto rounded-lg">
                             <v-list-item class="px-0 py-0">
                                 <v-list-item-content class="px-0 py-0">
                                     <!-- LIGNE 1 -->
                                     <div class="px-5 py-1">
                                         <v-card-actions class="d-flex justify-space-between align-center">
-                                            <v-btn color="red" @click.stop="dialogUpdatePostUp(post.title, post.description, post.image_url, post.id)">
+                                            <v-btn color="red" aria-label="Modifier ce post" @click.stop="dialogUpdatePostUp(post.title, post.description, post.image_url, post.id)">
                                                 <v-icon>mdi-file-document-edit</v-icon>
                                                 <span class="ml-1 d-none d-sm-inline">Modifier</span>
                                             </v-btn>
-                                            <v-btn color="red" @click="deletePost(post.id)">
+                                            <v-btn color="red" aria-label="Supprimer ce post" @click="deletePost(post.id)">
                                                 <v-icon>mdi-delete</v-icon>
                                                 <span class="ml-1 d-none d-sm-inline">Supprimer</span>
                                             </v-btn>
@@ -49,7 +49,7 @@
                                         <div class="px-5 py-2 text-h5">{{ post.title }}</div>
                                         <div class="px-5 py-2">{{ post.description }}</div>
                                         <div class="px-5 pt-3 pb-5 d-flex justify-center">
-                                            <v-img :src="post.image_url" contain width="200"/>
+                                            <v-img :src="post.image_url" contain width="200" :alt="getImageAlt(post.id, post.image_url)"/>
                                         </div>
                                     </router-link>
                                     <v-divider class="mb-0 red lighten-4"></v-divider>
@@ -57,11 +57,11 @@
                                     <div class="d-flex flex-md-row align-center mb-1">
                                         <div class="px-2 text-body-1">
                                             <!-- SI PAS DE LIKE -->
-                                            <v-btn text icon class="btn-opinion" color="green darken-2" v-if="post.likesNumber > 0">
+                                            <v-btn text icon aria-label="Liker ce post" class="btn-opinion" color="green darken-2" v-if="post.likesNumber > 0">
                                                 <v-icon>mdi-thumb-up</v-icon>
                                             </v-btn>
                                             <!-- SI LIKE -->
-                                            <v-btn text icon class="btn-opinion" color="green lighten-2" v-else>
+                                            <v-btn text icon aria-label="Liker ce post" class="btn-opinion" color="green lighten-2" v-else>
                                                 <v-icon>mdi-thumb-up</v-icon>
                                             </v-btn>
                                             {{ post.likesNumber }}
@@ -69,23 +69,21 @@
                                         <v-divider vertical class="red lighten-4"></v-divider>
                                         <div class="pl-2 text-body-1">
                                             <!-- SI PAS DE DISLIKE -->
-                                            <v-btn text icon class="btn-opinion" color="red accent-4" v-if="post.dislikesNumber > 0">
+                                            <v-btn text icon aria-label="Disliker ce post" class="btn-opinion" color="red accent-4" v-if="post.dislikesNumber > 0">
                                                 <v-icon>mdi-thumb-down</v-icon>
                                             </v-btn>
                                             <!-- SI DISLIKE -->
-                                            <v-btn text icon class="btn-opinion" color="red lighten-3" v-else>
+                                            <v-btn text icon aria-label="Disliker ce post" class="btn-opinion" color="red lighten-3" v-else>
                                                 <v-icon>mdi-thumb-down</v-icon>
                                             </v-btn>
                                             {{ post.dislikesNumber }}
                                         </div>
                                         <v-divider vertical class="red lighten-4 ml-4"></v-divider>
-                                        <router-link class="black--text" :to="{ name : 'OnePost', params: { id: post.id }}">
-                                            <div class="px-2 text-body-1">
-                                                <v-icon class="d-inline d-sm-none">mdi-comment</v-icon>
-                                                <span class="d-none d-sm-inline">Commentaires </span>
-                                                ({{post.commentsNumber}})
-                                            </div>
-                                        </router-link>
+                                        <div class="px-2 text-body-1">
+                                            <v-icon class="d-inline d-sm-none">mdi-comment</v-icon>
+                                            <span class="d-none d-sm-inline">Commentaires </span>
+                                            ({{post.commentsNumber}})
+                                        </div>
                                     </div>
                                     <!-- DIALOGUE DE MODIFICATION DE POST -->
                                     <v-dialog v-model="dialogUpdatePost" persistent max-width="600px">
@@ -103,11 +101,11 @@
                                             </v-card-text>
                                             <v-card-actions>
                                                 <v-spacer></v-spacer>
-                                                <v-btn color="blue darken-1" text @click="dialogUpdatePost = false">
+                                                <v-btn color="blue darken-1" aria-label="Annuler la modification du post" text @click="dialogUpdatePost = false">
                                                     Annuler
                                                 </v-btn>
-                                                <v-btn color="green darken-1" text :disabled="!valid" @click="updatePost()">
-                                                    Modifier
+                                                <v-btn color="green darken-1" aria-label="Valider la modification du post" text :disabled="!valid" @click="updatePost()">
+                                                    Valider
                                                 </v-btn>
                                             </v-card-actions>
                                         </v-card>
@@ -115,9 +113,9 @@
                                 </v-list-item-content>
                             </v-list-item>
                         </v-card>
-                    </v-col>
-                </v-row>
-            </v-container>
+                    </article>
+                </section>
+            </v-main>
         </v-container>
     </div>
 </template>
@@ -189,6 +187,18 @@ export default {
                 this.posts = res.data; // Tous les posts de l'utilisateur
                 console.log("Les posts de l'utilisateur " + this.posts[0].user_id + " sont bien affichés !");
             })
+        },
+        getImageAlt(postId, postImageURL){
+            this.posts.id = postId;
+            // Récupérer le nom de l'image qui sera le texte alternatif
+            this.posts.image_url = postImageURL;
+            console.log(postImageURL);
+            if (postImageURL !== ""){
+                const lastUnderscore = postImageURL.lastIndexOf("_");
+                const lastSlash = postImageURL.lastIndexOf("/") + 1;
+                const imageAlt = postImageURL.slice(lastSlash, lastUnderscore).split("_").join(" ");
+                return imageAlt
+            }
         },
         dialogUpdatePostUp(postTitle, postDescription, postImageUrl, postId){
             // Récupérer les anciennes données du post

@@ -1,29 +1,29 @@
 <template>
     <div>
     <!-- Si l'utilisateur n'est pas bien connecté -->
-        <div v-if="!accedAccount">
+        <v-main v-if="!accedAccount">
             <p class="display-1 text-center mx-auto" width="100%">Accès non autorisé !</p>
-        </div>
+        </v-main>
     <!-- Si l'utilisateur est bien connecté -->
         <v-container class="fill-height" fluid v-if="accedAccount">
             <HeaderLogged/>
-            <v-container class="fill-height" fluid>
+            <v-main class="container fluid fill-height">
                 <!-- TITRE -->
-                <v-row class="my-2">
+                <section class="row my-2">
                     <v-col>
                         <h1 class="text-center text-h4 text-sm-h3">
                             Bienvenue sur le Forum !
                         </h1>
                     </v-col>
-                </v-row>
+                </section>
                 <PostsNav/>
-                <v-row class="d-flex flex-column">
+                <section class="row d-flex flex-column">
                     <!-- SI PAS DE POSTS -->
                     <v-col v-if="post == 0">
                         <p class="text-center mx-auto my-15 text-h5 text-sm-h4">Aucun post trouvé !</p>
                     </v-col>
                     <!-- SI POST -->
-                    <v-col cols="12" class="mt-3" v-if="post !== 0" :key="post.id">
+                    <article class="col-12 mt-3" v-if="post !== 0" :key="post.id">
                         <!-- POST -->
                         <v-card width="600" class="mx-auto rounded-lg">
                             <v-list-item class="px-0 py-0">
@@ -32,11 +32,11 @@
                                     <div v-if="sessionUserId === post.user_id || sessionUserRole === 2">
                                         <div class="px-5 py-1">
                                             <v-card-actions class="d-flex justify-space-between align-center">
-                                                <v-btn color="red" @click.stop="dialogUpdatePostUp(post.title, post.description, post.image_url, post.id)" v-if="sessionUserId === post.user_id">
+                                                <v-btn color="red" aria-label="Modifier ce post" @click.stop="dialogUpdatePostUp(post.title, post.description, post.image_url, post.id)" v-if="sessionUserId === post.user_id">
                                                     <v-icon>mdi-file-document-edit</v-icon>
                                                     <span class="ml-1 d-none d-sm-inline">Modifier</span>
                                                 </v-btn>
-                                                <v-btn color="red" @click="deletePost(post.id)" v-if="sessionUserId === post.user_id || sessionUserRole === 2">
+                                                <v-btn color="red" aria-label="Supprimer ce post" @click="deletePost(post.id)" v-if="sessionUserId === post.user_id || sessionUserRole === 2">
                                                     <v-icon>mdi-delete</v-icon>
                                                     <span class="ml-1 d-none d-sm-inline">Supprimer</span>
                                                 </v-btn>
@@ -51,20 +51,20 @@
                                     <div class="px-5 py-2 text-h5">{{ post.title }}</div>
                                     <div class="px-5 py-2">{{ post.description }}</div>
                                     <div class="px-5 pt-3 pb-5 d-flex justify-center">
-                                        <v-img :src="post.image_url" contain width="200"/>
+                                        <v-img :src="post.image_url" contain width="200" :alt="imageAlt"/>
                                     </div>
                                     <v-divider class="mb-0 red lighten-4"></v-divider>
                                     <!-- LIGNE 4 -->
                                     <div class="d-flex flex-md-row align-center mb-1">
                                         <div class="px-2 text-body-1">
-                                            <v-btn text icon :color="likeColor.color" @click="modifyLike()">
+                                            <v-btn text icon aria-label="Liker ce post" :color="likeColor.color" @click="modifyLike()">
                                                 <v-icon>mdi-thumb-up</v-icon>
                                             </v-btn>
                                             {{ post.likesNumber }}
                                         </div>
                                         <v-divider vertical class="red lighten-4"></v-divider>
                                         <div class="pl-2 text-body-1">
-                                            <v-btn text icon :color="dislikeColor.color" @click="modifyDislike()">
+                                            <v-btn text icon aria-label="Disliker ce post" :color="dislikeColor.color" @click="modifyDislike()">
                                                 <v-icon>mdi-thumb-down</v-icon>
                                             </v-btn>
                                             {{ post.dislikesNumber }}
@@ -92,11 +92,11 @@
                                             </v-card-text>
                                             <v-card-actions>
                                                 <v-spacer></v-spacer>
-                                                <v-btn color="blue darken-1" text @click="dialogUpdatePost = false">
+                                                <v-btn color="blue darken-1" aria-label="Annuler la modification du post" text @click="dialogUpdatePost = false">
                                                     Annuler
                                                 </v-btn>
-                                                <v-btn color="green darken-1" text :disabled="!valid" @click="updatePost()">
-                                                    Modifier
+                                                <v-btn color="green darken-1" aria-label="Valider la modification du post" text :disabled="!valid" @click="updatePost()">
+                                                    Valider
                                                 </v-btn>
                                             </v-card-actions>
                                         </v-card>
@@ -105,7 +105,7 @@
                             </v-list-item>
                         </v-card>
                         <!-- BLOC DE COMMENTAIRES -->
-                        <div class="comment comment--sm comment--xs comment--xss comment--xsss mx-auto pa-3 rounded-b-xl d-flex flex-column blue-grey lighten-3">
+                        <section class="comment comment--sm comment--xs comment--xss comment--xsss mx-auto pa-3 rounded-b-xl d-flex flex-column blue-grey lighten-3">
                             <!-- SI PAS DE COMMMENTAIRES -->
                             <div v-if="comments == 0">
                                 <p class="text-center mx-auto mt-1 mb-3">Aucun commentaire trouvé !</p>
@@ -118,11 +118,11 @@
                                         <div v-if="sessionUserId === comment.user_id || sessionUserRole === 2">
                                             <div class="px-5">
                                                 <v-card-actions class="d-flex justify-space-between align-center">
-                                                    <v-btn color="red" @click.stop="dialogUpdateCommentUp(comment.content, comment.id)" v-if="sessionUserId === comment.user_id">
+                                                    <v-btn color="red" aria-label="Modifier ce commentaire" @click.stop="dialogUpdateCommentUp(comment.content, comment.id)" v-if="sessionUserId === comment.user_id">
                                                         <v-icon dense>mdi-comment-edit</v-icon>
                                                         <span class="ml-1 d-none d-sm-inline">Modifier</span>
                                                     </v-btn>
-                                                    <v-btn color="red" @click="deleteComment(comment.id)" v-if="sessionUserId === comment.user_id || sessionUserRole === 2">
+                                                    <v-btn color="red" aria-label="Supprimer ce commentaire" @click="deleteComment(comment.id)" v-if="sessionUserId === comment.user_id || sessionUserRole === 2">
                                                         <v-icon dense>mdi-delete</v-icon>
                                                         <span class="ml-1 d-none d-sm-inline">Supprimer</span>
                                                     </v-btn>
@@ -149,11 +149,11 @@
                                                 </v-card-text>
                                                 <v-card-actions class="pt-0">
                                                     <v-spacer></v-spacer>
-                                                    <v-btn color="blue darken-1" text @click="dialogUpdateComment = false">
+                                                    <v-btn color="blue darken-1" aria-label="Annuler la modification du commentaire" text @click="dialogUpdateComment = false">
                                                         Annuler
                                                     </v-btn>
-                                                    <v-btn color="green darken-1" text :disabled="!valid" @click="updateComment()">
-                                                        Modifier
+                                                    <v-btn color="green darken-1" aria-label="Valider la modification du commentaire" text :disabled="!valid" @click="updateComment()">
+                                                        Valider
                                                     </v-btn>
                                                 </v-card-actions>
                                             </v-card>
@@ -169,15 +169,15 @@
                                         </v-form>
                                 </v-card-text>
                                 <v-card-actions class="pa-0 pb-4 mr-1">
-                                        <v-btn :disabled="!valid" color="green" icon @click="createComment()">
+                                        <v-btn :disabled="!valid" aria-label="Créer le commentaire" color="green" icon @click="createComment()">
                                             <v-icon>mdi-send</v-icon>
                                         </v-btn>
                                 </v-card-actions>
                             </v-card>
-                        </div>
-                    </v-col>
-                </v-row>
-            </v-container>
+                        </section>
+                    </article>
+                </section>
+            </v-main>
         </v-container>
     </div>
 </template>
@@ -201,6 +201,7 @@ export default {
             sessionUserId: 0,
             sessionUserRole: 0,
             post: [],
+            imageAlt: "",
             comments: [],
             likeColor: [],
             dislikeColor: [],
@@ -278,6 +279,12 @@ export default {
                         this.dislikeColor = { color: "red accent-4" };
                     }
                     console.log("Le post " + this.post.id + " est bien affiché !");
+
+                    // Récupérer le nom de l'image qui sera le texte alternatif
+                    const image = this.post.image_url;
+                    const lastUnderscore = image.lastIndexOf("_");
+                    const lastSlash = image.lastIndexOf("/") + 1;
+                    this.imageAlt = image.slice(lastSlash, lastUnderscore).split("_").join(" ");
                 }
             })
         },

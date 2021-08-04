@@ -1,23 +1,23 @@
 <template>
     <div>
     <!-- Si l'utilisateur n'est pas bien connecté -->
-        <div v-if="!accedAccount">
+        <v-main v-if="!accedAccount">
             <p class="display-1 text-center mx-auto" width="100%">Accès non autorisé !</p>
-        </div>
+        </v-main>
     <!-- Si l'utilisateur est bien connecté -->
         <v-container class="fill-height" fluid v-if="accedAccount">
             <HeaderLogged/>
-            <v-container class="fill-height" fluid>
-                <v-row class="my-2">
+            <v-main class="container fluid fill-height">
+                <section class="row my-2">
                     <v-col>
                         <h1 class="text-center text-h4 text-sm-h3">
                             Bienvenue sur le Forum !
                         </h1>
                     </v-col>
-                </v-row>
+                </section>
                 <PostsNav/>
                 <Posts/>
-            </v-container>
+            </v-main>
         </v-container>
     </div>
 </template>

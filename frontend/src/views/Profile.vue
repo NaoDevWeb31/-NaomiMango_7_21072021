@@ -5,52 +5,54 @@
         
         <!-- Si l'utilisateur est bien connecté -->
         <HeaderLogged v-if="accedAccount"/>
-        <v-row v-if="accedAccount">
-            <v-col class="my-2">
-                <h1 class="text-h3 text-sm-h2 text-center">Mon Profil</h1>
-            </v-col>
-        </v-row>
-        <v-row v-if="accedAccount" class="d-flex flex-column flex-sm-row justify-center">
-            <v-card raised class="pa-4 mx-auto" width="40rem" >
-                <v-card-title>
-                    Informations personnelles de l'utilisateur :
-                </v-card-title>
-                <v-divider></v-divider>
-                <v-card-text>
-                    <!-- NOM -->
-                    <v-row class="d-flex flex-column align-center flex-sm-row justify-space-between">
-                        <v-col cols="6" sm="3">
-                            <p class="black--text text-center text-sm-left data grey lighten-3">Nom</p>
-                        </v-col>
-                        <v-col cols="12" sm="9">
-                            <p class="black--text data grey lighten-1 text-center">{{ userProfile.lastName }}</p>
-                        </v-col>
-                    </v-row>
-                    <!-- PRÉNOM -->
-                    <v-row class="d-flex flex-column align-center flex-sm-row justify-space-between">
-                        <v-col cols="6" sm="3">
-                            <p class="black--text text-center text-sm-left data grey lighten-3">Prénom</p>
-                        </v-col>
-                        <v-col cols="12" sm="9">
-                            <p class="black--text data grey lighten-1 text-center">{{ userProfile.firstName }}</p>
-                        </v-col>
-                    </v-row>
-                    <!-- EMAIL -->
-                    <v-row class="d-flex flex-column align-center flex-sm-row justify-space-between">
-                        <v-col cols="6" sm="3">
-                            <p class="black--text text-center text-sm-left data grey lighten-3">E-mail</p>
-                        </v-col>
-                        <v-col cols="12" sm="9">
-                            <p class="black--text data grey lighten-1 text-center">{{ userProfile.email }}</p>
-                        </v-col>
-                    </v-row>
-                </v-card-text>
-                <v-divider></v-divider>
-                <v-card-actions class="d-flex justify-end mt-3">
-                    <v-btn color="red" @click="deleteUser()">Supprimer mon compte</v-btn>
-                </v-card-actions>
-            </v-card>
-        </v-row>
+        <v-main>
+            <v-row v-if="accedAccount">
+                <v-col class="my-2">
+                    <h1 class="text-h3 text-sm-h2 text-center">Mon Profil</h1>
+                </v-col>
+            </v-row>
+            <section v-if="accedAccount" class="row mx-3 mx-sm-auto d-flex flex-column flex-sm-row justify-center">
+                <v-card raised class="pa-4 mx-auto" width="40rem" >
+                    <v-card-title>
+                        Informations personnelles de l'utilisateur :
+                    </v-card-title>
+                    <v-divider></v-divider>
+                    <v-card-text>
+                        <!-- NOM -->
+                        <v-row class="d-flex flex-column align-center flex-sm-row justify-space-between">
+                            <v-col cols="6" sm="3">
+                                <p class="black--text text-center text-sm-left data grey lighten-3">Nom</p>
+                            </v-col>
+                            <v-col cols="12" sm="9">
+                                <p class="black--text data grey lighten-1 text-center">{{ userProfile.lastName }}</p>
+                            </v-col>
+                        </v-row>
+                        <!-- PRÉNOM -->
+                        <v-row class="d-flex flex-column align-center flex-sm-row justify-space-between">
+                            <v-col cols="6" sm="3">
+                                <p class="black--text text-center text-sm-left data grey lighten-3">Prénom</p>
+                            </v-col>
+                            <v-col cols="12" sm="9">
+                                <p class="black--text data grey lighten-1 text-center">{{ userProfile.firstName }}</p>
+                            </v-col>
+                        </v-row>
+                        <!-- EMAIL -->
+                        <v-row class="d-flex flex-column align-center flex-sm-row justify-space-between">
+                            <v-col cols="6" sm="3">
+                                <p class="black--text text-center text-sm-left data grey lighten-3">E-mail</p>
+                            </v-col>
+                            <v-col cols="12" sm="9">
+                                <p class="black--text data grey lighten-1 text-center">{{ userProfile.email }}</p>
+                            </v-col>
+                        </v-row>
+                    </v-card-text>
+                    <v-divider></v-divider>
+                    <v-card-actions class="d-flex justify-end mt-3">
+                        <v-btn color="red" @click="deleteUser()" aria-label="Supprimer mon compte">Supprimer mon compte</v-btn>
+                    </v-card-actions>
+                </v-card>
+            </section>
+        </v-main>
     </v-container>
 </template>
 

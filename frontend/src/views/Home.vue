@@ -2,7 +2,7 @@
     <v-container class="bg-img fill-height">
       <Header/>
       <v-main>
-        <v-row class="text-center">
+        <section class="row text-center">
           <!-- TITRE -->
           <v-col class="py-16 mt-md-10">
             <h1 class="text-h5 text-sm-h4 text-md-h3 font-weight-bold mt-10 mt-sm-16 mb-3">
@@ -13,8 +13,8 @@
               <br>Partagez et commentez vos GIFs.
             </h2>
           </v-col>
-        </v-row>
-        <v-row class="text-center d-flex flex-column align-center flex-sm-row">
+        </section>
+        <section class="row text-center d-flex flex-column align-center flex-sm-row">
           <!-- BOUTON INSCRIPTION -->
           <v-col cols="12" sm="6">
             <v-btn x-large color="red" @click="goSignUp()">
@@ -29,7 +29,7 @@
               <v-icon>mdi-login-variant</v-icon>
             </v-btn>
           </v-col>
-        </v-row>
+        </section>
       </v-main>
     </v-container>
 </template>

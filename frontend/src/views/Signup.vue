@@ -3,13 +3,13 @@
         <Header/>
         <v-main>
             <!-- TITRE -->
-            <v-row class="text-center my-4">
+            <section class="row text-center my-4">
                 <v-col cols="12">
                     <h1 class="text-h4 text-sm-h3 font-weight-regular">
                         Créez un nouveau compte !
                     </h1>
                 </v-col>
-            </v-row>
+            </section>
             <!-- FORMULAIRE INSCRIPTION -->
             <section class="row mx-0">
                 <v-card raised class="my-4 mx-5 mx-sm-auto" width="30rem">

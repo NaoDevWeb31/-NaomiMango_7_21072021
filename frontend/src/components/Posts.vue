@@ -183,7 +183,6 @@ export default {
             this.posts.id = postId;
             // Récupérer le nom de l'image qui sera le texte alternatif
             this.posts.image_url = postImageURL;
-            console.log(postImageURL);
             if (postImageURL !== ""){
                 const lastUnderscore = postImageURL.lastIndexOf("_");
                 const lastSlash = postImageURL.lastIndexOf("/") + 1;

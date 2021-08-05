@@ -14,9 +14,6 @@
                 </v-col>
             </section>
             <section class="row d-flex flex-column flex-sm-row justify-center">
-                <v-col cols="12" class="d-sr-only">
-                    <h2 class="text-center mx-auto text-body-1 text-sm-h5">Jetez un coup d'oeil à votre profil ou allez directement sur le forum Groupomania !</h2>
-                </v-col>
                 <!-- CARTE PROFIL -->
                 <v-col cols="12" sm="6">
                     <router-link to="/account/profile">

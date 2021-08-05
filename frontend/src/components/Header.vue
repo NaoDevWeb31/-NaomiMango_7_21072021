@@ -13,6 +13,7 @@
                     transition="scale-transition"
                     width="100"
                     />
+                <div class="black--text font-weight-medium ml-2 d-sr-only">Page d'accueil</div>
                 </div>
             </router-link>
             <v-spacer></v-spacer>

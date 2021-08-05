@@ -6,16 +6,16 @@
         <!-- Si l'utilisateur est bien connecté -->
         <HeaderLogged v-if="accedAccount"/>
         <v-main>
-            <v-row v-if="accedAccount">
+            <section v-if="accedAccount" class="row">
                 <v-col class="my-2">
                     <h1 class="text-h3 text-sm-h2 text-center">Mon Profil</h1>
                 </v-col>
-            </v-row>
+            </section>
             <section v-if="accedAccount" class="row mx-3 mx-sm-auto d-flex flex-column flex-sm-row justify-center">
                 <v-card raised class="pa-4 mx-auto" width="40rem" >
-                    <v-card-title>
+                    <h2 class="v-card__title">
                         Informations personnelles de l'utilisateur :
-                    </v-card-title>
+                    </h2>
                     <v-divider></v-divider>
                     <v-card-text>
                         <!-- NOM -->

@@ -4,16 +4,19 @@
         
         <!-- Si l'utilisateur est bien connecté -->
         <HeaderLogged v-if="accedAccount"/>
-        <v-main class="container fluid fill-height pa-3" fluid v-if="accedAccount">
-            <v-row class="mt-8 my-sm-5">
+        <v-main class="container fluid fill-height pa-3" v-if="accedAccount">
+            <section class="row mt-8 my-sm-5">
                 <v-col>
                     <h1 class="text-center text-h5 text-sm-h3">
                         Bienvenue sur votre compte
                         <span>{{firstName}}</span> !
                     </h1>
                 </v-col>
-            </v-row>
-            <v-row class="d-flex flex-column flex-sm-row justify-center">
+            </section>
+            <section class="row d-flex flex-column flex-sm-row justify-center">
+                <v-col cols="12" class="d-sr-only">
+                    <h2 class="text-center mx-auto text-body-1 text-sm-h5">Jetez un coup d'oeil à votre profil ou allez directement sur le forum Groupomania !</h2>
+                </v-col>
                 <!-- CARTE PROFIL -->
                 <v-col cols="12" sm="6">
                     <router-link to="/account/profile">
@@ -38,7 +41,7 @@
                         </v-card>
                     </router-link>
                 </v-col>
-            </v-row>
+            </section>
         </v-main>
     </v-container>
 </template>

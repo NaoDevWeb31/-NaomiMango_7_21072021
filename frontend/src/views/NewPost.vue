@@ -9,7 +9,7 @@
             <HeaderLogged/>
             <v-main class="container fluid fill-height">
                 <!-- TITRE -->
-                <section class="my-2">
+                <section class="row my-2">
                     <v-col>
                         <h1 class="text-center text-h4 text-sm-h3">
                             Créez un Nouveau Post
@@ -18,10 +18,13 @@
                 </section>
                 <!-- FORMULAIRE NOUVEAU POST -->
                 <section class="row mx-3 mx-sm-auto">
+                    <v-col cols="12" class="d-sr-only">
+                        <h2 class="text-center mx-auto text-h6 text-sm-h5">Formulaire de création d'un post</h2>
+                    </v-col>
                     <v-card outlined elevation="3" class="my-4 mx-auto pt-3" width="30rem">
                         <v-card-text>
                             <v-form ref="form" v-model="valid" >
-                                <v-text-field v-model="title" ref="title" :rules="titleRules" counter="70" label="Titre du post (*)" type="text" required prepend-icon="mdi-format-title" color="black" outlined clearable clear-icon="mdi-eraser" auto-grow></v-text-field>
+                                <v-text-field v-model="title" ref="title" :rules="titleRules" counter="70" label="Titre du post (*)" type="text" required prepend-icon="mdi-format-title" color="black" outlined clearable clear-icon="mdi-eraser"></v-text-field>
                                 <v-textarea v-model="description" ref="description" :rules="descriptionRules" counter="320" label="Description du post (*)" type="text" prepend-icon="mdi-text" color="black" outlined clearable clear-icon="mdi-eraser" auto-grow></v-textarea>
                                 <v-file-input v-model="image" ref="image" :rules="imageRules" accept="image/gif" label="Image du post" type="file" filled prepend-icon="mdi-camera" show-size color="black"></v-file-input>
                                 <div class="my-1 text-right">Champs requis (*)</div>

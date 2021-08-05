@@ -1,5 +1,8 @@
 <template>
     <section class="row d-flex flex-column" v-if="accedAccount">
+        <v-col cols="12" class="d-sr-only">
+            <h2 class="text-center mx-auto text-body-1 text-sm-h5">Voici la liste de tous les posts du forum Groupomania :</h2>
+        </v-col>
         <!-- SI PAS DE POSTS -->
         <v-col v-if="postsNumber === 0">
             <p class="text-center mx-auto my-15 text-h5 text-sm-h4">Le forum est vide !</p>
@@ -32,7 +35,7 @@
                         <v-divider class="red lighten-4 mb-3"></v-divider>
                         <!-- LIGNE 3 -->
                         <router-link class="router-link black--text" :to="{ name : 'OnePost', params: { id: post.id }}">
-                            <div class="px-5 py-2 text-h5">{{ post.title }}</div>
+                            <h3 class="px-5 py-2 text-h5">{{ post.title }}</h3>
                             <div class="px-5 py-2">{{ post.description }}</div>
                             <div class="px-5 pt-3 pb-5 d-flex justify-center">
                                 <v-img :src="post.image_url" contain width="200" :alt="getImageAlt(post.id, post.image_url)"/>

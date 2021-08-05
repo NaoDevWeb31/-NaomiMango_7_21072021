@@ -15,6 +15,9 @@
           </v-col>
         </section>
         <section class="row text-center d-flex flex-column align-center flex-sm-row">
+          <v-col cols="12" class="d-sr-only">
+            <h2 class="text-center mx-auto text-body-1 text-sm-h6">Rendez-vous sur la page de votre choix !</h2>
+          </v-col>
           <!-- BOUTON INSCRIPTION -->
           <v-col cols="12" sm="6">
             <v-btn x-large color="red" @click="goSignUp()">

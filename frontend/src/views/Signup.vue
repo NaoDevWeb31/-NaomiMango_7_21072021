@@ -12,6 +12,9 @@
             </section>
             <!-- FORMULAIRE INSCRIPTION -->
             <section class="row mx-0">
+                <v-col cols="12" class="d-sr-only">
+                    <h2 class="text-center mx-auto text-h6 text-sm-h5">Formulaire d'inscription</h2>
+                </v-col>
                 <v-card raised class="my-4 mx-5 mx-sm-auto" width="30rem">
                     <v-card-text>
                         <v-form ref="form" v-model="valid" >

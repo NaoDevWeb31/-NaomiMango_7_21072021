@@ -18,6 +18,9 @@
                 </section>
                 <PostsNav/>
                 <section class="row d-flex flex-column">
+                    <v-col cols="12" class="d-sr-only">
+                        <h2 class="text-center mx-auto text-body-1 text-sm-h5">Voici le post sélectionné :</h2>
+                    </v-col>
                     <!-- SI PAS DE POSTS -->
                     <v-col v-if="post == 0">
                         <p class="text-center mx-auto my-15 text-h5 text-sm-h4">Aucun post trouvé !</p>
@@ -48,7 +51,7 @@
                                     <div class="px-5 py-1 text-overline">Publié par {{ post.first_name }} {{ post.last_name }} | Le {{ formatCreationDate(post.creation_date) }}</div>
                                     <v-divider class="red lighten-4 mb-3"></v-divider>
                                     <!-- LIGNE 3 -->
-                                    <div class="px-5 py-2 text-h5">{{ post.title }}</div>
+                                    <h3 class="px-5 py-2 text-h5">{{ post.title }}</h3>
                                     <div class="px-5 py-2">{{ post.description }}</div>
                                     <div class="px-5 pt-3 pb-5 d-flex justify-center">
                                         <v-img :src="post.image_url" contain width="200" :alt="imageAlt"/>
@@ -106,6 +109,9 @@
                         </v-card>
                         <!-- BLOC DE COMMENTAIRES -->
                         <section class="comment comment--sm comment--xs comment--xss comment--xsss mx-auto pa-3 rounded-b-xl d-flex flex-column blue-grey lighten-3">
+                            <v-col cols="12" class="d-sr-only">
+                                <h3 class="text-center mx-auto text-h6">Voici la liste de commentaires du post :</h3>
+                            </v-col>
                             <!-- SI PAS DE COMMMENTAIRES -->
                             <div v-if="comments == 0">
                                 <p class="text-center mx-auto mt-1 mb-3">Aucun commentaire trouvé !</p>
